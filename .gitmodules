@@ -1,0 +1,6 @@
+[submodule "MinilibX"]
+	path = MinilibX
+	url = https://github.com/Xxdzs/MinilibX.git
+[submodule "Libft"]
+	path = Libft
+	url = https://github.com/Xxdzs/Libft.git
