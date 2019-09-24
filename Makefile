@@ -1,11 +1,11 @@
-NAME:=fdf
+NAME:=fdf.exe
 
 SOURCE_PATH:=src
 CACHE_PATH:=cache
 HEADER_PATH:=include
 
 FILES=$(shell find $(SOURCE_PATH) -name '*.c')
-OBJECTS=$(FILES:.c=.o)
+OBJECTS=$(subst $(SOURCE_PATH),$(CACHE_PATH),$(FILES:.c=.o))
 
 # ===== Libraries =====
 LFT_PATH:=Libft
@@ -22,23 +22,43 @@ LIBS=$(LFT) $(MLX)
 # =====================
 
 # ===== Compiler =====
-COMPILER:=gcc
-LINKER:=ld
+CC ?= gcc
 
-IFLAGS=$(addprefix -L,$(LIBS_PATH))
-IFLAGS+=$(addprefix -l,$(LIBS_NAME))
+CFLAGS=-Wall -Wextra
+CFLAGS+=-g
+#CFLAGS+=-O2
+CFLAGS+=$(addprefix -I,$(HEADER_PATH) $(LFT_PATH)/include $(MLX_PATH))
 
-LFLAGS=$(IFLAGS)
+LFLAGS=-lX11 -lXext
+LFLAGS+=$(addprefix -L,$(LIBS_PATH))
+LFLAGS+=$(addprefix -l,$(LIBS_NAME))
 # ====================
 
 all: $(NAME)
 
-$(NAME): $(OBJ) | $(LIBS)
-	$(LINKER) $(LFLAGS) -o $@ $^
+$(NAME): $(OBJECTS) | $(LIBS)
+	$(CC) $^ $(LFLAGS) -o $@
+
+$(CACHE_PATH)/%.o: $(SOURCE_PATH)/%.c | $(CACHE_PATH)
+	$(CC) -c $< $(CFLAGS) -o $@
 
 %.a:
 	@make -C $(@D)
 
+$(CACHE_PATH):
+	mkdir $@
+
 test:
 	@echo -e $(IFLAG)
+	@echo objects $(OBJECTS)
 
+clean:
+	rm -rf $(CACHE_PATH)
+
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean
+	@$(MAKE) all --no-print-directory
+
+.PHONY: all clean fclean re

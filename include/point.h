@@ -18,4 +18,6 @@ S_POINTS(unsigned);
 S_POINTS(float);
 S_POINTS(double);
 
+#define MAKE_POINT(T, ...) (T){__VA_ARGS__}
+
 typedef s_point2_unsigned t_dimension;
