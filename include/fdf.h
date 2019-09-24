@@ -13,14 +13,15 @@
 
 SET_FLOAT_PRECISION(float);
 
-typedef struct env s_env;
+typedef struct env    s_env;
+typedef struct window s_window;
 
 struct window
 {
 	void*       mlx_win;
 	void*       mlx_img;
 	uint8_t*    pixels;
-	int         bits_per_pixel;
+	int         bit_per_pixel;
 	int         line_size;
 	int         endian;
 	t_dimension dim;
@@ -34,3 +35,5 @@ struct env
 };
 
 t_array parse_fdf(const char* filename);
+bool    add_window(s_env* env, t_dimension dim, const char* name);
+void    free_window(s_window* win, void* mlx);

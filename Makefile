@@ -29,9 +29,9 @@ CFLAGS+=-g
 #CFLAGS+=-O2
 CFLAGS+=$(addprefix -I,$(HEADER_PATH) $(LFT_PATH)/include $(MLX_PATH))
 
-LFLAGS=-lX11 -lXext
-LFLAGS+=$(addprefix -L,$(LIBS_PATH))
+LFLAGS=$(addprefix -L,$(LIBS_PATH))
 LFLAGS+=$(addprefix -l,$(LIBS_NAME))
+LFLAGS+=-lXext -lX11
 # ====================
 
 all: $(NAME)
