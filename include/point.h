@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ft_prepro.h>
+
 #define S_POINTS(T)                              \
     typedef struct point2_##T                    \
     {                                            \
@@ -18,6 +20,6 @@ S_POINTS(unsigned);
 S_POINTS(float);
 S_POINTS(double);
 
-#define MAKE_POINT(T, ...) (T){__VA_ARGS__}
+#define MAKE_POINT(T, ...) (CAT(CAT(s_point,ARG_COUNT(__VA_ARGS__)),CAT(_,T))){__VA_ARGS__}
 
 typedef s_point2_unsigned t_dimension;

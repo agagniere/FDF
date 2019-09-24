@@ -8,7 +8,7 @@
 
 static void parse_fdf_line(const char* line, t_array* points, int line_nb)
 {
-	s_point3_int point = MAKE_POINT(s_point3_int, 0, -line_nb, 0);
+	s_point3_int point = MAKE_POINT(int, 0, -line_nb, 0);
 
 	while (ft_isspace(*line))
 		line++;

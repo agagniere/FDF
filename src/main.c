@@ -24,7 +24,7 @@ int main(int ac, char** av)
 			return 1;
 		}
 		env.windows = NEW_ARRAY(s_window);
-		add_window(&env, MAKE_POINT(t_dimension, 1280, 720), "Fil de Fer");
+		add_window(&env, (t_dimension){1280, 720}, "Fil de Fer");
 		mlx_loop(env.mlx);
 	}
 	return 0;
