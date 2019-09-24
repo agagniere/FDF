@@ -15,6 +15,9 @@ SET_FLOAT_PRECISION(float);
 
 typedef struct env    s_env;
 typedef struct window s_window;
+typedef struct hooks  s_hooks;
+
+typedef int           (*t_fnct)();
 
 struct window
 {
@@ -25,7 +28,19 @@ struct window
 	int         line_size;
 	int         endian;
 	t_dimension dim;
+	s_hooks     hooks;
 };
+
+struct hooks
+{
+	t_fnct expose;
+	t_fnct repaint;
+	t_fnct key_press;
+	t_fnct key_release;
+	t_fnct mouse_click;
+	t_fnct mouse_move;
+	t_fnct mouse_drag;
+}
 
 struct env
 {
