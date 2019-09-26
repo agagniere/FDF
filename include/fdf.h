@@ -19,6 +19,17 @@ typedef struct hooks  s_hooks;
 
 typedef int           (*t_fnct)();
 
+struct hooks
+{
+	t_fnct expose;
+	t_fnct repaint;
+	t_fnct key_press;
+	t_fnct key_release;
+	t_fnct mouse_click;
+	t_fnct mouse_move;
+	t_fnct mouse_drag;
+};
+
 struct window
 {
 	void*       mlx_win;
@@ -30,17 +41,6 @@ struct window
 	t_dimension dim;
 	s_hooks     hooks;
 };
-
-struct hooks
-{
-	t_fnct expose;
-	t_fnct repaint;
-	t_fnct key_press;
-	t_fnct key_release;
-	t_fnct mouse_click;
-	t_fnct mouse_move;
-	t_fnct mouse_drag;
-}
 
 struct env
 {
