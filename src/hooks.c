@@ -12,7 +12,7 @@ int fdf_repaint(s_window* win)
 	return 0;
 }
 
-int fdf_key_press(s_window* win)
+int fdf_key_press(int key, s_window* win)
 {
 	return 0;
 }

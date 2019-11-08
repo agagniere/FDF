@@ -28,7 +28,7 @@ int main(int ac, char** av)
 			return 1;
 		}
 		fta_reserve(&windows, 1);
-		*(s_window*)windows.data = make_window(mlx, (t_dimension){1280, 720}, "Fil de Fer", FDF_HOOKS);
+		make_window(mlx, (t_dimension){1280, 720}, "Fil de Fer", FDF_HOOKS, (s_window*)windows.data);
 		windows.size += 1;
 		mlx_do_key_autorepeaton(mlx);
 		mlx_loop(mlx);
