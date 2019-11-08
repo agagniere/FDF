@@ -2,6 +2,8 @@
 
 #include <ft_prepro.h>
 
+typedef struct point2_unsigned t_dimension;
+
 #define S_POINTS(T)                              \
     typedef struct point2_##T                    \
     {                                            \
@@ -20,6 +22,15 @@ S_POINTS(unsigned);
 S_POINTS(float);
 S_POINTS(double);
 
-#define MAKE_POINT(T, ...) (CAT(CAT(s_point,ARG_COUNT(__VA_ARGS__)),CAT(_,T))){__VA_ARGS__}
+/*
+** make_point macro
+** -
+** Provided the type of coordinates and their value,
+** it evaluates as a point of the right dimension and type.
+** -
+** example:
+** MAKE_POINT(int,3,4) -> (s_point2_int){3,4}
+** MAKE_POINT(float,0,7,3) -> (s_point3_float){0,7,3}
+*/
 
-typedef s_point2_unsigned t_dimension;
+#define MAKE_POINT(T, ...) (CAT(CAT(s_point,ARG_COUNT(__VA_ARGS__)),CAT(_,T))){__VA_ARGS__}

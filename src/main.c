@@ -1,4 +1,5 @@
 #include "fdf.h"
+
 #include <ft_printf.h>
 #include <mlx.h>
 
@@ -10,22 +11,28 @@ int main(int ac, char** av)
 {
 	if (ac > 1)
 	{
-		s_env env;
+		void*   mlx;
+		t_array points = NEW_ARRAY(s_point3_int);
+		t_array windows = NEW_ARRAY(s_window);
+
 		errno = 0;
-		env.points = parse_fdf(av[1]);
-		if (env.points.size == 0)
+		points = parse_fdf(av[1]);
+		if (points.size == 0)
 		{
 			perror(av[0]);
 			return 1;
 		}
-		if ((env.mlx = mlx_init()) == NULL)
+		if ((mlx = mlx_init()) == NULL)
 		{
 			ft_dprintf(2, "%s: MLX initialization failure\n", av[0]);
 			return 1;
 		}
-		env.windows = NEW_ARRAY(s_window);
-		add_window(&env, (t_dimension){1280, 720}, "Fil de Fer");
-		mlx_loop(env.mlx);
+		fta_reserve(&windows, 1);
+		*(s_window*)windows.data = make_window(mlx, (t_dimension){1280, 720}, "Fil de Fer", FDF_HOOKS);
+		windows.size += 1;
+		mlx_do_key_autorepeaton(mlx);
+		mlx_loop(mlx);
+		ft_printf("Out of loop\n");
 	}
 	return 0;
 }
