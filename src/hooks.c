@@ -2,6 +2,7 @@
 #include "mlx_wrapper.h"
 #include <mlx.h>
 #include <ft_printf.h>
+#include <stdlib.h>
 
 int fdf_expose(s_window* win)
 {
@@ -31,6 +32,8 @@ int fdf_key_press(int key, s_window* win)
 {
 	(void)win;
 	ft_printf("Pressed %i\n", key);
+	if (key == KEY_Q)
+		exit(0);
 	fdf_repaint(win);
 	return 0;
 }
