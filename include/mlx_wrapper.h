@@ -79,3 +79,6 @@ enum e_key
 
 bool make_window(s_window* out_win, void* mlx, t_dimension dim, const char* name, s_hooks hooks);
 void free_window(s_window* win);
+
+void draw_line(s_window* win, s_point2_int from, s_point2_int to, int color);
+void set_pixel(s_window* win, unsigned x, unsigned y, int color);
