@@ -2,21 +2,21 @@
 #include <mlx.h>
 #include <strings.h>
 
-bool make_window(void* mlx, t_dimension dim, const char* name, s_hooks hooks, s_window* dest)
+bool make_window(s_window* out, void* mlx, t_dimension dim, const char* name, s_hooks hooks)
 {
-	dest->dim = dim;
-	dest->hooks = hooks;
-	dest->mlx_ptr = mlx;
-	dest->mlx_img = mlx_new_image(mlx, dim.x, dim.y);
-	dest->mlx_win = mlx_new_window(mlx, dim.x, dim.y, (char*)name);
-	if (dest->mlx_win == NULL || dest->mlx_img == NULL)
+	out->dim = dim;
+	out->hooks = hooks;
+	out->mlx_ptr = mlx;
+	out->mlx_img = mlx_new_image(mlx, dim.x, dim.y);
+	out->mlx_win = mlx_new_window(mlx, dim.x, dim.y, (char*)name);
+	if (out->mlx_win == NULL || out->mlx_img == NULL)
 		return false;
-	dest->pixels = (uint8_t*)mlx_get_data_addr(dest->mlx_img, &(dest->bit_per_pixel),
-											   &(dest->line_size), &(dest->endian));
+	out->pixels = (uint8_t*)mlx_get_data_addr(out->mlx_img, &(out->bit_per_pixel),
+											  &(out->line_size), &(out->endian));
 	if (hooks.expose)
-		mlx_expose_hook(dest->mlx_win, hooks.expose, dest);
+		mlx_expose_hook(out->mlx_win, hooks.expose, out);
 	if (hooks.key_press)
-		mlx_key_hook(dest->mlx_win, hooks.key_press, dest);
+		mlx_key_hook(out->mlx_win, hooks.key_press, out);
 	return true;
 }
 
