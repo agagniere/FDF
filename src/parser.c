@@ -8,7 +8,7 @@
 
 static void parse_fdf_line(const char* line, s_fdf_map* map, int line_nb)
 {
-	s_point3_int point = MAKE_POINT(int, 0, -line_nb, 0);
+	s_point3_int point = MAKE_POINT(int, 0, line_nb, 0);
 
 	while (ft_isspace(*line))
 		line++;
@@ -26,7 +26,7 @@ static void parse_fdf_line(const char* line, s_fdf_map* map, int line_nb)
 			line++;
 		point.x++;
 	}
-	map->dim.x = point.x + 1;
+	map->dim.x = point.x;
 }
 
 s_fdf_map fdf_parse(const char* filename)
