@@ -1,6 +1,6 @@
 #include "fdf.h"
 #include <mlx.h>
-#include <strings.h>
+#include <libft.h>
 
 bool make_window(s_window* out, void* mlx, t_dimension dim, const char* name, s_hooks hooks)
 {
@@ -24,5 +24,5 @@ void free_window(s_window* win)
 {
 	mlx_destroy_image(win->mlx_ptr, win->mlx_img);
 	mlx_destroy_window(win->mlx_ptr, win->mlx_win);
-	bzero(win, sizeof(win));
+	ft_bzero(win, sizeof(win));
 }
