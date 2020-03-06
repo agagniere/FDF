@@ -1,5 +1,7 @@
 #include "fdf.h"
 #include "mlx_wrapper.h"
+#include "keys.h"
+
 #include <mlx.h>
 #include <ft_printf.h>
 #include <stdlib.h>
