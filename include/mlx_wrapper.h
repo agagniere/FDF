@@ -37,6 +37,7 @@ struct window
 };
 
 #define NO_HOOKS (s_hooks){NULL, NULL, NULL, NULL, NULL, NULL, NULL}
+#define NEW_WINDOW (s_window){NO_HOOKS, NULL, NULL, NULL, NULL, {0,0}, 0, 0, 0}
 
 bool make_window(s_window* out_win, void* mlx, t_dimension dim, const char* name, s_hooks hooks);
 void free_window(s_window* win);

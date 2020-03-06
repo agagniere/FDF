@@ -1,39 +1,126 @@
 #include "fdf.h"
 
+#include <libft.h>
 #include <ft_printf.h>
+#include <ft_string_legacy.h>
 #include <mlx.h>
 
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+static int fdf_start(const char* program_name, const char* filename,
+					 t_dimension dim, const char* title)
+{
+	void*     mlx;
+	t_array   windows = NEW_ARRAY(s_fdf_env);
+	s_fdf_env fdf = NEW_FDF_ENV;
+
+	errno = 0;
+	fdf.map = fdf_parse(filename);
+	if (fdf.map.points.size == 0)
+	{
+		perror(program_name);
+		return 3;
+	}
+	if ((mlx = mlx_init()) == NULL
+		|| !make_window(&(fdf.win), mlx, dim, title, FDF_HOOKS)
+		|| fta_append(&windows, &fdf, 1) != 0)
+	{
+		ft_dprintf(2, "%s: MLX initialization failure\n", program_name);
+		return 4;
+	}
+	mlx_do_key_autorepeaton(mlx);
+	mlx_loop(mlx);
+	ft_putendl("===== Out of loop =====");
+	return 0;
+}
+
+void free_charp(char** variable)
+{
+	free(*variable);
+}
+
 int main(int ac, char** av)
 {
-	if (ac > 1)
+	const char* program_name = *av;
+	t_dimension dim = MAKE_POINT(unsigned, 1280, 720);
+	char*       title __attribute__((cleanup (free_charp))) = ft_strdup("Fil de Fer");
+	while (ac-- > 0 && *++av != NULL)
 	{
-		void*     mlx;
-		t_array   windows = fta_new(sizeof(s_window) + sizeof(s_fdf_map));
-		s_fdf_map map;
+		bool        is_long;
+		const char* name = NULL;
+		char*       value = NULL;
 
-		errno = 0;
-		map = fdf_parse(av[1]);
-		if (map.points.size == 0)
+		if (**av != '-' || ((is_long = (*++*av == '-')) && !*++*av && ac--))
+			break;
+/*
+		if (**av != '-')
+			break;
+		is_long = (*++*av == '-');
+		if (is_long && !*++*av)
 		{
-			perror(av[0]);
+			ac--;
+			break;
+		}
+*/
+		name = *av;
+		if (!is_long)
+		{
+			if (!*++*av)
+			{
+				ac--;
+				av++;
+			}
+			value = *av;
+		}
+		else if ((value = ft_strchr(*av, '=')))
+			*value++ = '\0';
+		else
+		{
+			ac--;
+			value = *++av;
+		}
+
+		if (is_long && ft_strequ(name, "help"))
+		{
+			ft_putendl("Usage: fdf [OPTION]... FILE");
+			ft_putendl("\nOptions:");
+			ft_putendl("\t-w --width    : set the window's width");
+			ft_putendl("\t-h --height   : set the window's height");
+			ft_putendl("\t-t --title    : set the window's title");
+			ft_putendl("\t-v --version  : display the program's version and exit");
+			ft_putendl("\t--help        : display this usage message and exit");
+			return 0;
+		}
+		if (is_long ? ft_strequ(name, "version") : *name == 'v')
+		{
+			ft_putendl("Fil de Fer version 1.0");
+			return 0;
+		}
+		if (value == NULL)
+		{
+			ft_dprintf(2, "%s: Option \"%.*s\" requires an argument.\n", program_name, (is_long ? 30 : 1), name);
+			ft_dprintf(2, "Try '%s --help' for more information.\n", program_name);
 			return 1;
 		}
-		if ((mlx = mlx_init()) == NULL)
+
+		if (is_long ? ft_strequ(name, "width") : *name == 'w')
+			dim.x = ft_atoi(value);
+		else if (is_long ? ft_strequ(name, "height") : *name == 'h')
+			dim.y = ft_atoi(value);
+		else if (is_long ? ft_strequ(name, "title") : *name == 't')
 		{
-			ft_dprintf(2, "%s: MLX initialization failure\n", av[0]);
-			return 1;
+			free(title);
+			title = ft_strdup(value);
 		}
-		fta_reserve(&windows, 1);
-		make_window((s_window*)windows.data, mlx, (t_dimension){1280, 720}, "Fil de Fer", FDF_HOOKS);
-		*(s_fdf_map*)(windows.data + sizeof(s_window)) = map;
-		windows.size += 1;
-		mlx_do_key_autorepeaton(mlx);
-		mlx_loop(mlx);
-		ft_printf("Out of loop\n");
 	}
-	return 0;
+	if (ac == 0)
+	{
+		ft_dprintf(2, "Usage: fdf [OPTION]... FILE\n\n");
+		ft_dprintf(2, "You need to rovide a filename.\n");
+		ft_dprintf(2, "Try '%s --help' for more information.\n");
+		return 2;
+	}
+	return fdf_start(program_name, *av, dim, title);
 }
