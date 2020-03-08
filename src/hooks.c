@@ -39,8 +39,8 @@ int fdf_key_press(int key, s_fdf_env* env)
 	ft_printf("Pressed %i\n", key);
 	switch (key)
 	{
+	case KEY_Equal:
 	case KEY_KeypadPlus:
-	case KEY_Plus:
 		env->zoom *= 1.5;
 		break;
 	case KEY_Minus:

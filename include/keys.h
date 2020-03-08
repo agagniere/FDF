@@ -1,9 +1,11 @@
 #pragma once
 
-#if __APPLE__
 
 enum e_key
 {
+
+#if __APPLE__
+
 	KEY_A                    = 0x00,
 	KEY_S                    = 0x01,
 	KEY_D                    = 0x02,
@@ -117,13 +119,27 @@ enum e_key
 	KEY_DownArrow                 = 0x7D,
 	KEY_UpArrow                   = 0x7E,
 	KEY_MAX = 0xFFFF
-};
 
 #else
 
-enum e_key
-{
-	KEY_A = 0x61,
+	KEY_Space = ' ',
+	KEY_Quote = '\'',
+	KEY_Comma = ',',
+	KEY_Minus = '-',
+	KEY_Period = '.',
+	KEY_Slash = '/',
+	KEY_0 = '0',
+	KEY_1 /* = '1' */,
+	KEY_2 /* = '2' */,
+	KEY_3 /* = '3' */,
+	KEY_4 /* = '4' */,
+	KEY_5 /* = '5' */,
+	KEY_6 /* = '6' */,
+	KEY_7 /* = '7' */,
+	KEY_8 /* = '8' */,
+	KEY_9 /* = '9' */,
+	KEY_Equal = '=',
+	KEY_A = 'a',
 	KEY_B /* = 0x62 */,
 	KEY_C /* = 0x63 */,
 	KEY_D /* = 0x64 */,
@@ -159,6 +175,7 @@ enum e_key
 	KEY_KeypadPlus = 0xffab,
 	KEY_KeypadMinus = 0xffad,
 	KEY_MAX = 0xFFFF
-};
 
 #endif
+
+};
