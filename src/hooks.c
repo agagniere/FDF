@@ -8,7 +8,6 @@
 
 int fdf_expose(s_window* win)
 {
-	ft_printf("Hook %s\n", __FUNCTION__);
 	mlx_put_image_to_window(win->mlx_ptr, win->mlx_win, win->mlx_img, 0, 0);
 	return 0;
 }
@@ -18,12 +17,10 @@ int fdf_expose(s_window* win)
 int fdf_repaint(s_fdf_env* env)
 {
 	t_array screen_points[1] = {fdf_transform(env)};
+	unsigned i = screen_points->size;
 
-	ft_printf("Hook %s\n", __FUNCTION__);
 	ft_printf("%lu points\n", screen_points->size);
 	ft_memset(env->win.pixels, 250 + (250 << 8) + (250 << 16), env->win.line_size * env->win.dim.y);
-
-	unsigned i = screen_points->size;
 	while (i --> 1)
 	{
 		if (i % env->map.dim.x > 0)
@@ -37,7 +34,6 @@ int fdf_repaint(s_fdf_env* env)
 
 int fdf_key_press(int key, s_fdf_env* env)
 {
-	ft_printf("Pressed %i\n", key);
 	switch (key)
 	{
 	case KEY_Equal:

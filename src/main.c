@@ -5,6 +5,7 @@
 #include <ft_string_legacy.h>
 #include <mlx.h>
 
+#include <math.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,6 +15,8 @@ static void init_fdf(s_fdf_env* env)
 	env->offset.x = env->win.dim.x / 2;
 	env->offset.y = env->win.dim.y / 2;
 	env->zoom = env->win.dim.x / env->map.dim.x / 2;
+	env->rotation.z = M_PI_4;
+	env->rotation.x = M_PI_4;
 	fdf_repaint(env);
 }
 
