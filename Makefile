@@ -32,7 +32,7 @@ CFLAGS+=$(addprefix -I,$(HEADER_PATH) $(LFT_PATH)/include $(MLX_PATH))
 
 LFLAGS=$(addprefix -L,$(LIBS_PATH))
 LFLAGS+=$(addprefix -l,$(LIBS_NAME))
-LFLAGS+=-lXext -lX11
+LFLAGS+=-lXext -lX11 -lm
 # ====================
 
 all: $(NAME)

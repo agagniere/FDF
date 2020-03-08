@@ -3,6 +3,7 @@
 #include "point.h"
 
 #include <ft_array.h>
+#include <libft.h>
 
 #include <stdint.h>
 #include <stdbool.h>

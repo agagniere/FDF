@@ -25,7 +25,7 @@ void draw_line(s_window* win, s_point2_int from, s_point2_int to, int color)
 	int          way = (max > 0) * 2 - 1;
 	int          i = 0;
 
-	if (!(is_in_frame(win, from.x, from.y) && is_in_frame(win, to.x, to.y)))
+	if (!is_in_frame(win, from.x, from.y) && !is_in_frame(win, to.x, to.y))
 	{
 		ft_dprintf(2, "%s aborted because both points are off bounds.\n", __FUNCTION__);
 		return ;

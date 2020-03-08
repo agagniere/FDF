@@ -9,6 +9,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+static void init_fdf(s_fdf_env* env)
+{
+	env->offset.x = env->win.dim.x / 2;
+	env->offset.y = env->win.dim.y / 2;
+	env->zoom = env->win.dim.x / env->map.dim.x / 2;
+	fdf_repaint(env);
+}
+
 static int fdf_start(const char* program_name, const char* filename,
 					 t_dimension dim, const char* title)
 {
@@ -24,19 +32,20 @@ static int fdf_start(const char* program_name, const char* filename,
 		return 3;
 	}
 	if ((mlx = mlx_init()) == NULL
-		|| !make_window(&(fdf.win), mlx, dim, title, FDF_HOOKS)
+		|| !make_window(&fdf.win, mlx, dim, title, FDF_HOOKS)
 		|| fta_append(&windows, &fdf, 1) != 0)
 	{
 		ft_dprintf(2, "%s: MLX initialization failure\n", program_name);
 		return 4;
 	}
+	init_fdf(&fdf);
 	mlx_do_key_autorepeaton(mlx);
 	mlx_loop(mlx);
 	ft_putendl("===== Out of loop =====");
 	return 0;
 }
 
-void free_charp(char** variable)
+static void free_charp(char** variable)
 {
 	free(*variable);
 }
@@ -46,24 +55,15 @@ int main(int ac, char** av)
 	const char* program_name = *av;
 	t_dimension dim = MAKE_POINT(unsigned, 1280, 720);
 	char*       title __attribute__((cleanup (free_charp))) = ft_strdup("Fil de Fer");
+
 	while (ac-- > 0 && *++av != NULL)
 	{
 		bool        is_long;
 		const char* name = NULL;
 		char*       value = NULL;
 
-		if (**av != '-' || ((is_long = (*++*av == '-')) && !*++*av && ac--))
+		if (**av != '-' || ((is_long = (*++*av == '-')) && !*++*av && av++ && ac--))
 			break;
-/*
-		if (**av != '-')
-			break;
-		is_long = (*++*av == '-');
-		if (is_long && !*++*av)
-		{
-			ac--;
-			break;
-		}
-*/
 		name = *av;
 		if (!is_long)
 		{

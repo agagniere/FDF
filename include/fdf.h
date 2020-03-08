@@ -26,7 +26,7 @@ struct fdf_env
 {
 	s_window     win;
 	s_fdf_map    map;
-	t_3Dpoint    rotations;
+	t_3Dpoint    rotation;
 	s_point2_int offset;
 	float        zoom;
 };
@@ -51,7 +51,7 @@ s_fdf_map fdf_parse(const char* filename);
 ** whose first two coordinates correspond to a pixel,
 ** and the last is a color.
 */
-t_array   fdf_transform(s_fdf_map* map);
+t_array   fdf_transform(s_fdf_env* env);
 
 /* Hook called to refresh the contents of the image, implies fdf_expose */
 int fdf_repaint(s_fdf_env* env);

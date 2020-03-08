@@ -139,6 +139,8 @@ enum e_key
 	KEY_8 /* = '8' */,
 	KEY_9 /* = '9' */,
 	KEY_Equal = '=',
+	KEY_LeftBracket = '[',
+	KEY_RightBracket = ']',
 	KEY_A = 'a',
 	KEY_B /* = 0x62 */,
 	KEY_C /* = 0x63 */,
