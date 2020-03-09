@@ -34,7 +34,7 @@ LDLIBS+=$(addprefix -l,$(LIBS_NAME))
 MLX_CONFIG=$(MLX:.a=.mk)
 include $(MLX_CONFIG)
 
-CPPFLAGS+=-Wall -Wextra -ansi
+CPPFLAGS+=-Wall -Wextra
 CPPFLAGS+=-g -O0
 CPPFLAGS+=$(addprefix -I,$(HEADER_PATH) $(LFT_PATH)/include $(MLX_PATH)/$(MLX_FOLDER))
 # ====================
