@@ -10,6 +10,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
+** A major non-POSIX OS, Android,
+** still defines M_PI and others.
+*/
+
 static void init_fdf(s_fdf_env* env)
 {
 	env->offset.x = env->win.dim.x / 2;
