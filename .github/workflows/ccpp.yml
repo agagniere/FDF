@@ -7,28 +7,23 @@ on:
     branches: [ master ]
 
 jobs:
-  build-X11:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Checkout submodules
-      shell: bash
-      run: |
-        auth_header="$(git config --local --get http.https://github.com/.extraheader)"
-        git submodule sync --recursive
-        git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
-    - name: make
-      run: make
+  build:
+    name: Build on {{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, ubuntu-16.04]
 
-  build-macOSX:
-    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Download source files
+      uses: actions/checkout@v2
     - name: Checkout submodules
       shell: bash
       run: |
         auth_header="$(git config --local --get http.https://github.com/.extraheader)"
         git submodule sync --recursive
         git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
-    - name: make
+    - name: Compile
       run: make
+    - name: Clean
+      run: make fclean
