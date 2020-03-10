@@ -5,6 +5,7 @@
 #include <mlx.h>
 #include <ft_printf.h>
 #include <stdlib.h>
+#include <time.h>
 
 int fdf_expose(s_window* win)
 {
@@ -12,14 +13,17 @@ int fdf_expose(s_window* win)
 	return 0;
 }
 
-# define GET(N) ARRAY_GETL(s_point2_int, screen_points, N)
+# define GET(N) ARRAY_GETL(s_point2_int, &screen_points, N)
 
 int fdf_repaint(s_fdf_env* env)
 {
-	t_array screen_points[1] = {fdf_transform(env)};
-	unsigned i = screen_points->size;
+	struct timespec before, after;
+	clock_gettime(CLOCK_REALTIME, &before);
+	t_array screen_points = fdf_transform(env);
+	clock_gettime(CLOCK_REALTIME, &after);
+	unsigned i = screen_points.size;
 
-	ft_printf("%lu points\n", screen_points->size);
+	ft_printf("%lu points in %li seconds and %7u ns\n", i, after.tv_sec - before.tv_sec, after.tv_nsec - before.tv_nsec);
 	ft_memset(env->win.pixels, 250 + (250 << 8) + (250 << 16), env->win.line_size * env->win.dim.y);
 	while (i --> 1)
 	{
@@ -46,8 +50,8 @@ int fdf_key_press(int key, s_fdf_env* env)
 	case KEY_RightBracket: env->rotation.y -= 0.2;  break;
 	case KEY_UpArrow:      env->rotation.x += 0.2;  break;
 	case KEY_DownArrow:    env->rotation.x -= 0.2;  break;
-	case KEY_Q: exit(0);
-	default: return 0;
+	case KEY_Q:            exit(0);
+	default:               return 0;
 	}
 	fdf_repaint(env);
 	return 0;
