@@ -46,8 +46,8 @@ int fdf_key_press(int key, s_fdf_env* env)
 	case KEY_KeypadMinus:  env->zoom /= 1.5;        break;
 	case KEY_LeftArrow:    env->rotation.z -= 0.2;  break;
 	case KEY_RightArrow:   env->rotation.z += 0.2;  break;
-	case KEY_LeftBracket:  env->rotation.y += 0.2;  break;
-	case KEY_RightBracket: env->rotation.y -= 0.2;  break;
+	case KEY_LeftBracket:  env->rotation.y -= 0.2;  break;
+	case KEY_RightBracket: env->rotation.y += 0.2;  break;
 	case KEY_UpArrow:      env->rotation.x += 0.2;  break;
 	case KEY_DownArrow:    env->rotation.x -= 0.2;  break;
 	case KEY_Q:            exit(0);
