@@ -1,11 +1,12 @@
 #include "fdf.h"
-#include <mlx.h>
+
 #include <libft.h>
+#include <mlx.h>
 
 bool make_window(s_window* out, void* mlx, t_dimension dim, const char* name, s_hooks hooks)
 {
-	out->dim = dim;
-	out->hooks = hooks;
+	out->dim     = dim;
+	out->hooks   = hooks;
 	out->mlx_ptr = mlx;
 	out->mlx_img = mlx_new_image(mlx, dim.x, dim.y);
 	out->mlx_win = mlx_new_window(mlx, dim.x, dim.y, (char*)name);

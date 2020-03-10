@@ -19,16 +19,16 @@ void set_pixel(s_window* win, unsigned x, unsigned y, int color)
 
 void draw_line(s_window* win, s_point2_int from, s_point2_int to, int color)
 {
-	s_point2_int diff = MAKE_POINT(int, to.x - from.x, to.y - from.y);
+	s_point2_int diff          = MAKE_POINT(int, to.x - from.x, to.y - from.y);
 	bool         is_horizontal = ABS(diff.x) > ABS(diff.y);
-	int          max = is_horizontal ? diff.x : diff.y;
-	int          way = (max > 0) * 2 - 1;
-	int          i = 0;
+	int          max           = is_horizontal ? diff.x : diff.y;
+	int          way           = (max > 0) * 2 - 1;
+	int          i             = 0;
 
 	if (!is_in_frame(win, from.x, from.y) && !is_in_frame(win, to.x, to.y))
 	{
 		ft_dprintf(2, "%s aborted because both points are off bounds.\n", __FUNCTION__);
-		return ;
+		return;
 	}
 	while (i != max)
 	{

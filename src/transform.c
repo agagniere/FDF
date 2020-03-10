@@ -20,7 +20,7 @@ void add_rotation(t_matrix* m, t_real angle, int axe)
 	i = 9;
 	while (i --> 0)
 	{
-		r[i] = 0;
+		r[i]  = 0;
 		int x = i % 3;
 		int y = i / 3;
 		int j = 3;
@@ -32,7 +32,7 @@ void add_rotation(t_matrix* m, t_real angle, int axe)
 
 t_array fdf_transform(s_fdf_env* env)
 {
-	t_array       result = NEW_ARRAY(s_point3_int);
+	t_array       result   = NEW_ARRAY(s_point3_int);
 	s_point3_int* iterator = ARRAY_ITERATOR(&env->map.points);
 	s_point3_int  screen_point;
 	t_matrix      t[3 * 3] = {env->zoom,0,0, 0,env->zoom,0, 0,0,env->zoom};
@@ -58,7 +58,7 @@ t_array fdf_transform(s_fdf_env* env)
 
 t_array fdf_transform_simplistic(s_fdf_env* env)
 {
-	t_array       result = NEW_ARRAY(s_point3_int);
+	t_array       result   = NEW_ARRAY(s_point3_int);
 	s_point3_int* iterator = ARRAY_ITERATOR(&env->map.points);
 	t_3Dpoint     point;
 	s_point3_int  screen_point;

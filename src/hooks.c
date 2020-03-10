@@ -1,9 +1,9 @@
 #include "fdf.h"
-#include "mlx_wrapper.h"
 #include "keys.h"
+#include "mlx_wrapper.h"
 
-#include <mlx.h>
 #include <ft_printf.h>
+#include <mlx.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -13,7 +13,7 @@ int fdf_expose(s_window* win)
 	return 0;
 }
 
-# define GET(N) ARRAY_GETL(s_point2_int, &screen_points, N)
+#define GET(N) ARRAY_GETL(s_point2_int, &screen_points, N)
 
 int fdf_repaint(s_fdf_env* env)
 {

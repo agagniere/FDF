@@ -4,14 +4,13 @@
 
 #include <ft_array.h>
 #include <libft.h>
-
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef struct window s_window;
 typedef struct hooks  s_hooks;
 
-typedef int           (*t_fnct)();
+typedef int (*t_fnct)();
 
 struct hooks
 {

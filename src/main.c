@@ -1,12 +1,11 @@
 #include "fdf.h"
 
-#include <libft.h>
+#include <errno.h>
 #include <ft_printf.h>
 #include <ft_string_legacy.h>
-#include <mlx.h>
-
+#include <libft.h>
 #include <math.h>
-#include <errno.h>
+#include <mlx.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,22 +16,22 @@
 
 static void init_fdf(s_fdf_env* env)
 {
-	env->offset.x = env->win.dim.x / 2;
-	env->offset.y = env->win.dim.y / 2;
-	env->zoom = env->win.dim.x / env->map.dim.x / 2;
+	env->offset.x   = env->win.dim.x / 2;
+	env->offset.y   = env->win.dim.y / 2;
+	env->zoom       = env->win.dim.x / env->map.dim.x / 2;
 	env->rotation.z = M_PI_4;
 	env->rotation.x = M_PI_4;
 	fdf_repaint(env);
 }
 
-static int fdf_start(const char* program_name, const char* filename,
-					 t_dimension dim, const char* title)
+static int
+fdf_start(const char* program_name, const char* filename, t_dimension dim, const char* title)
 {
 	void*     mlx;
 	t_array   windows = NEW_ARRAY(s_fdf_env);
-	s_fdf_env fdf = NEW_FDF_ENV;
+	s_fdf_env fdf     = NEW_FDF_ENV;
 
-	errno = 0;
+	errno   = 0;
 	fdf.map = fdf_parse(filename);
 	if (fdf.map.points.size == 0)
 	{
@@ -67,7 +66,7 @@ int main(int ac, char** av)
 	while (ac-- > 0 && *++av != NULL)
 	{
 		bool        is_long;
-		const char* name = NULL;
+		const char* name  = NULL;
 		char*       value = NULL;
 
 		if (**av != '-' || ((is_long = (*++*av == '-')) && !*++*av && av++ && ac--))

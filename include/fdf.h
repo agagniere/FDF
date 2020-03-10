@@ -4,9 +4,9 @@
 
 #include <ft_array.h>
 
-#define SET_FLOAT_PRECISION(T)					 \
-	typedef T                 t_real;            \
-	typedef struct point2_##T t_complex;		 \
+#define SET_FLOAT_PRECISION(T)           \
+	typedef T                 t_real;    \
+	typedef struct point2_##T t_complex; \
 	typedef struct point3_##T t_3Dpoint
 
 SET_FLOAT_PRECISION(float);
@@ -51,7 +51,7 @@ s_fdf_map fdf_parse(const char* filename);
 ** whose first two coordinates correspond to a pixel,
 ** and the last is a color.
 */
-t_array   fdf_transform(s_fdf_env* env);
+t_array fdf_transform(s_fdf_env* env);
 
 /* Hook called to refresh the contents of the image, implies fdf_expose */
 int fdf_repaint(s_fdf_env* env);

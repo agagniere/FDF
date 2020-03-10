@@ -1,10 +1,10 @@
 #include "fdf.h"
-#include <libft.h>
+
+#include <fcntl.h>
 #include <ft_ctype.h>
 #include <get_next_line.h>
-
+#include <libft.h>
 #include <stdlib.h>
-#include <fcntl.h>
 
 static void parse_fdf_line(const char* line, s_fdf_map* map, int line_nb)
 {
@@ -31,9 +31,9 @@ static void parse_fdf_line(const char* line, s_fdf_map* map, int line_nb)
 
 s_fdf_map fdf_parse(const char* filename)
 {
-	int       fd = open(filename, O_RDONLY);
-	char*     line = NULL;
-	s_fdf_map map = NEW_FDF_MAP;
+	int       fd      = open(filename, O_RDONLY);
+	char*     line    = NULL;
+	s_fdf_map map     = NEW_FDF_MAP;
 	int       line_nb = 0;
 
 	if (fd != -1)
