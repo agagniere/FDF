@@ -32,6 +32,7 @@ int fdf_repaint(s_fdf_env* env)
 		if (i / env->map.dim.x > 0)
 			draw_line(&env->win, GET(i), GET(i - env->map.dim.x), 200 + (200 << 16));
 	}
+	fta_clear(&screen_points);
 	fdf_expose(&env->win);
 	return 0;
 }

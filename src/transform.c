@@ -9,8 +9,8 @@ void add_rotation(t_matrix* m, t_real angle, int axe)
 	const t_real s = sinf(angle);
 	const t_real c = cosf(angle);
 	t_matrix b[9] = { c, -s,  s,
-					  s,  c, -s,
-					 -s,  s,  c};
+	                  s,  c, -s,
+	                 -s,  s,  c};
 	t_matrix r[9];
 	int i = 3;
 
@@ -34,7 +34,6 @@ t_array fdf_transform(s_fdf_env* env)
 {
 	t_array       result   = NEW_ARRAY(s_point3_int);
 	s_point3_int* iterator = ARRAY_ITERATOR(&env->map.points);
-	s_point3_int  screen_point;
 	t_matrix      t[3 * 3] = {env->zoom,0,0, 0,env->zoom,0, 0,0,env->zoom};
 
 	add_rotation(t, env->rotation.z, 2);
@@ -50,8 +49,7 @@ t_array fdf_transform(s_fdf_env* env)
 		point.x = x * t[0] + y * t[1] + point.z * t[2];
 		point.y = x * t[3] + y * t[4] + point.z * t[5];
 		point.z = x * t[6] + y * t[7] + point.z * t[8];
-		screen_point = MAKE_POINT(int, env->offset.x + point.x, env->offset.y + point.y, iterator->z);
-		fta_append(&result, &screen_point, 1);
+		fta_append(&result, (s_point3_int[]){MAKE_POINT(int, env->offset.x + point.x, env->offset.y + point.y, iterator->z)}, 1);
 	}
 	return result;
 }

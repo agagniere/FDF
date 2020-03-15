@@ -28,8 +28,8 @@ static int
 fdf_start(const char* program_name, const char* filename, t_dimension dim, const char* title)
 {
 	void*     mlx;
-	t_array   windows = NEW_ARRAY(s_fdf_env);
-	s_fdf_env fdf     = NEW_FDF_ENV;
+	t_array   windows __attribute__((cleanup (fta_clear))) = NEW_ARRAY(s_fdf_env);
+	s_fdf_env fdf = NEW_FDF_ENV;
 
 	errno   = 0;
 	fdf.map = fdf_parse(filename);
