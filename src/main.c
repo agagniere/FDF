@@ -78,8 +78,8 @@ int main(int ac, char** av)
 	if (ac == 0)
 	{
 		ft_dprintf(2, "Usage: fdf [OPTION]... FILE\n\n");
-		ft_dprintf(2, "You need to rovide a filename.\n");
-		ft_dprintf(2, "Try '%s --help' for more information.\n");
+		ft_dprintf(2, "You need to provide a filename.\n");
+		ft_dprintf(2, "Try '%s --help' for more information.\n", program_name);
 		return 2;
 	}
 	return fdf_start(program_name, *av, dim, title);
