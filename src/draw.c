@@ -1,6 +1,5 @@
 #include "mlx_wrapper.h"
 
-#include <ft_prepro.h>
 #include <ft_printf.h>
 #include <stdbool.h>
 

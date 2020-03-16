@@ -36,6 +36,12 @@ struct fdf_env
 #define NEW_FDF_MAP (s_fdf_map){NEW_ARRAY(s_point3_int), MAKE_POINT(unsigned,0,0), 0, 0}
 #define NEW_FDF_ENV (s_fdf_env){NEW_WINDOW, NEW_FDF_MAP, {0,0,0}, {0,0}, 1}
 
+void fdf_init(s_fdf_env* env);
+
+void fdf_free(s_fdf_env* env);
+
+int  fdf_start(const char* program_name, const char* filename, t_dimension dim, const char* title);
+
 /*
 ** FDF::parse
 ** -

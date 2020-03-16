@@ -1,56 +1,9 @@
 #include "fdf.h"
 
-#include <errno.h>
 #include <ft_printf.h>
 #include <ft_string_legacy.h>
 #include <libft.h>
-#include <math.h>
-#include <mlx.h>
-#include <stdio.h>
 #include <stdlib.h>
-
-/*
-** A major non-POSIX OS, Android,
-** still defines M_PI and others.
-*/
-
-static void init_fdf(s_fdf_env* env)
-{
-	env->offset.x   = env->win.dim.x / 2;
-	env->offset.y   = env->win.dim.y / 2;
-	env->zoom       = env->win.dim.x / env->map.dim.x / 2;
-	env->rotation.z = M_PI_4;
-	env->rotation.x = M_PI_4;
-	fdf_repaint(env);
-}
-
-static int
-fdf_start(const char* program_name, const char* filename, t_dimension dim, const char* title)
-{
-	void*     mlx;
-	t_array   windows __attribute__((cleanup (fta_clear))) = NEW_ARRAY(s_fdf_env);
-	s_fdf_env fdf = NEW_FDF_ENV;
-
-	errno   = 0;
-	fdf.map = fdf_parse(filename);
-	if (fdf.map.points.size == 0)
-	{
-		perror(program_name);
-		return 3;
-	}
-	if ((mlx = mlx_init()) == NULL
-		|| !make_window(&fdf.win, mlx, dim, title, FDF_HOOKS)
-		|| fta_append(&windows, &fdf, 1) != 0)
-	{
-		ft_dprintf(2, "%s: MLX initialization failure\n", program_name);
-		return 4;
-	}
-	init_fdf(&fdf);
-	mlx_do_key_autorepeaton(mlx);
-	mlx_loop(mlx);
-	ft_putendl("===== Out of loop =====");
-	return 0;
-}
 
 static void free_charp(char** variable)
 {
