@@ -6,9 +6,9 @@
 #include <libft.h>
 #include <stdlib.h>
 
-static void parse_fdf_line(const char* line, s_fdf_map* map, int line_nb)
+static void parse_fdf_line(const char* line, t_fdf_map* map, int line_nb)
 {
-	s_point3_int point = MAKE_POINT(int, 0, line_nb, 0);
+	t_point3_int point = MAKE_POINT(int, 0, line_nb, 0);
 
 	while (ft_isspace(*line))
 		line++;
@@ -29,11 +29,11 @@ static void parse_fdf_line(const char* line, s_fdf_map* map, int line_nb)
 	map->dim.x = point.x;
 }
 
-s_fdf_map fdf_parse(const char* filename)
+t_fdf_map fdf_parse(const char* filename)
 {
 	int       fd      = open(filename, O_RDONLY);
 	char*     line    = NULL;
-	s_fdf_map map     = NEW_FDF_MAP;
+	t_fdf_map map     = NEW_FDF_MAP;
 	int       line_nb = 0;
 
 	if (fd != -1)

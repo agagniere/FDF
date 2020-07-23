@@ -7,15 +7,15 @@
 #include <stdlib.h>
 #include <time.h>
 
-int fdf_expose(s_window* win)
+int fdf_expose(t_window* win)
 {
 	mlx_put_image_to_window(win->mlx_ptr, win->mlx_win, win->mlx_img, 0, 0);
 	return 0;
 }
 
-#define GET(N) ARRAY_GETL(s_point2_int, &screen_points, N)
+#define GET(N) ARRAY_GETL(t_point3_int, &screen_points, N)
 
-int fdf_repaint(s_fdf_env* env)
+int fdf_repaint(t_fdf_env* env)
 {
 	struct timespec before, after;
 	clock_gettime(CLOCK_REALTIME, &before);
@@ -23,21 +23,24 @@ int fdf_repaint(s_fdf_env* env)
 	clock_gettime(CLOCK_REALTIME, &after);
 	unsigned i = screen_points.size;
 
-	ft_printf("%lu points in %li seconds and %7u ns\n", i, after.tv_sec - before.tv_sec, after.tv_nsec - before.tv_nsec);
-	ft_memset(env->win.pixels, 250 + (250 << 8) + (250 << 16), env->win.line_size * env->win.dim.y);
+	ft_printf("%i %lu ", i, after.tv_nsec - before.tv_nsec);
+	ft_memset(env->win.pixels, env->pallette.background.color, env->win.line_size * env->win.dim.y);
+	clock_gettime(CLOCK_REALTIME, &before);
 	while (i --> 1)
 	{
 		if (i % env->map.dim.x > 0)
-			draw_line(&env->win, GET(i), GET(i - 1), 200 + (200 << 8));
+			fdf_draw_gradient(env, GET(i), GET(i - 1));
 		if (i / env->map.dim.x > 0)
-			draw_line(&env->win, GET(i), GET(i - env->map.dim.x), 200 + (200 << 16));
+			fdf_draw_gradient(env, GET(i), GET(i - env->map.dim.x));
 	}
+	clock_gettime(CLOCK_REALTIME, &after);
+	ft_printf("%lu\n", after.tv_nsec - before.tv_nsec);
 	fta_clear(&screen_points);
 	fdf_expose(&env->win);
 	return 0;
 }
 
-int fdf_key_press(int key, s_fdf_env* env)
+int fdf_key_press(int key, t_fdf_env* env)
 {
 	switch (key)
 	{
@@ -45,12 +48,16 @@ int fdf_key_press(int key, s_fdf_env* env)
 	case KEY_KeypadPlus:   env->zoom *= 1.5;        break;
 	case KEY_Minus:
 	case KEY_KeypadMinus:  env->zoom /= 1.5;        break;
-	case KEY_LeftArrow:    env->rotation.z -= 0.2;  break;
-	case KEY_RightArrow:   env->rotation.z += 0.2;  break;
+	case KEY_LeftArrow:    env->rotation.z += 0.2;  break;
+	case KEY_RightArrow:   env->rotation.z -= 0.2;  break;
 	case KEY_LeftBracket:  env->rotation.y -= 0.2;  break;
 	case KEY_RightBracket: env->rotation.y += 0.2;  break;
 	case KEY_UpArrow:      env->rotation.x += 0.2;  break;
 	case KEY_DownArrow:    env->rotation.x -= 0.2;  break;
+	case KEY_W:            env->offset.y -= env->win.dim.y / 10; break;
+	case KEY_S:            env->offset.y += env->win.dim.y / 10; break;
+	case KEY_A:            env->offset.x -= env->win.dim.x / 10; break;
+	case KEY_D:            env->offset.x += env->win.dim.x / 10; break;
 	case KEY_Q:            exit(0);
 	default:               return 0;
 	}
