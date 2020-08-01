@@ -16,7 +16,7 @@ jobs:
 
     steps:
     - name: Setup environment
-      run: test $(uname -s) = "Darwin" || { sudo apt-get update -q && sudo apt-get -yq install libx11-dev libxext-dev ; }
+      run: test $(uname -s) = "Darwin" || { sudo apt-get update -q && sudo apt-get -yq install libx11-dev libxext-dev ; locate Xlib.h ; locate XShm.h}
     - name: Download source files
       uses: actions/checkout@v2
     - name: Checkout submodules
