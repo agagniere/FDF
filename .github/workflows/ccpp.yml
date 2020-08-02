@@ -15,8 +15,6 @@ jobs:
         os: [macos-latest, ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
 
     steps:
-    - name: Setup environment
-      run: test $(uname -s) = "Darwin" || { sudo apt-get update -q && sudo apt-get -yq install libx11-dev libxext-dev ; locate Xlib.h ; locate XShm.h ; }
     - name: Download source files
       uses: actions/checkout@v2
     - name: Checkout submodules
@@ -25,6 +23,8 @@ jobs:
         auth_header="$(git config --local --get http.https://github.com/.extraheader)"
         git submodule sync --recursive
         git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+    - name: Setup environment
+      run: test $(uname -s) = "Darwin" || { sudo apt-get update -q && sudo apt-get -yq install libx11-dev libxext-dev libxpm-dev ; echo -e "\nHeaders locations :" ; locate Xlib.h ; locate XShm.h ; echo "-----" }
     - name: Compile
       run: make
     - name: Clean
