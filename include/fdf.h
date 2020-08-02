@@ -1,5 +1,6 @@
 #pragma once
 
+#include "colors.h"
 #include "mlx_wrapper.h"
 
 #include <ft_array.h>
@@ -11,8 +12,8 @@
 
 SET_FLOAT_PRECISION(float);
 
-typedef struct fdf_map s_fdf_map;
-typedef struct fdf_env s_fdf_env;
+typedef struct fdf_map t_fdf_map;
+typedef struct fdf_env t_fdf_env;
 
 struct fdf_map
 {
@@ -22,23 +23,35 @@ struct fdf_map
 	int         z_min;
 };
 
+struct fdf_pallette
+{
+	t_color_rgb background;
+	t_color_rgb top;
+	t_color_rgb bottom;
+	t_color_rgb subzero_top;
+	t_color_rgb subzero_bottom;
+};
+
 struct fdf_env
 {
-	s_window     win;
-	s_fdf_map    map;
-	t_3Dpoint    rotation;
-	s_point2_int offset;
-	float        zoom;
+	t_window            win;
+	t_fdf_map           map;
+	struct fdf_pallette pallette;
+	t_3Dpoint           rotation;
+	t_point2_int        offset;
+	float               zoom;
 };
+
+#define DEFAULT_FDF_PALLETTE (struct fdf_pallette){RGB(255,255,255), RGB(140,140,140), RGB(140,200,110), RGB(130,180,230), RGB(50,50,150)}
 
 #define FDF_HOOKS (struct hooks){fdf_expose, fdf_repaint, fdf_key_press, NULL, NULL, NULL, NULL}
 
-#define NEW_FDF_MAP (s_fdf_map){NEW_ARRAY(s_point3_int), MAKE_POINT(unsigned,0,0), 0, 0}
-#define NEW_FDF_ENV (s_fdf_env){NEW_WINDOW, NEW_FDF_MAP, {0,0,0}, {0,0}, 1}
+#define NEW_FDF_MAP (t_fdf_map){NEW_ARRAY(t_point3_int), MAKE_POINT(unsigned,0,0), 0, 0}
+#define NEW_FDF_ENV (t_fdf_env){NEW_WINDOW, NEW_FDF_MAP, DEFAULT_FDF_PALLETTE, {0,0,0}, {0,0}, 1}
 
-void fdf_init(s_fdf_env* env);
+void fdf_init(t_fdf_env* env);
 
-void fdf_free(s_fdf_env* env);
+void fdf_free(t_fdf_env* env);
 
 int  fdf_start(const char* program_name, const char* filename, t_dimension dim, const char* title);
 
@@ -48,7 +61,7 @@ int  fdf_start(const char* program_name, const char* filename, t_dimension dim, 
 ** Loads the specified file into a map.
 ** In case of failure the map will have 0 element.
 */
-s_fdf_map fdf_parse(const char* filename);
+t_fdf_map fdf_parse(const char* filename);
 
 /*
 ** FDF::transform
@@ -57,12 +70,15 @@ s_fdf_map fdf_parse(const char* filename);
 ** whose first two coordinates correspond to a pixel,
 ** and the last is a color.
 */
-t_array fdf_transform(s_fdf_env* env);
+t_array fdf_transform(t_fdf_env* env);
 
 /* Hook called to refresh the contents of the image, implies fdf_expose */
-int fdf_repaint(s_fdf_env* env);
+int fdf_repaint(t_fdf_env* env);
 
 /* Hook called to reapply the image on the window */
-int fdf_expose(s_window* win);
+int fdf_expose(t_window* win);
 
-int fdf_key_press(int key, s_fdf_env* env);
+/* Hook called to handle a keyboard input */
+int fdf_key_press(int key, t_fdf_env* env);
+
+void fdf_draw_gradient(t_fdf_env* env, t_point3_int from, t_point3_int to);

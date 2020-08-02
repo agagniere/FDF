@@ -3,7 +3,7 @@
 #include <libft.h>
 #include <mlx.h>
 
-bool make_window(s_window* out, void* mlx, t_dimension dim, const char* name, s_hooks hooks)
+bool make_window(t_window* out, void* mlx, t_dimension dim, const char* name, t_hooks hooks)
 {
 	out->dim     = dim;
 	out->hooks   = hooks;
@@ -21,7 +21,7 @@ bool make_window(s_window* out, void* mlx, t_dimension dim, const char* name, s_
 	return true;
 }
 
-void free_window(s_window* win)
+void free_window(t_window* win)
 {
 	mlx_destroy_image(win->mlx_ptr, win->mlx_img);
 	mlx_destroy_window(win->mlx_ptr, win->mlx_win);

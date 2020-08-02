@@ -11,17 +11,23 @@
 ** still defines M_PI and others.
 */
 
-void fdf_init(s_fdf_env* env)
+void fdf_init(t_fdf_env* env)
 {
 	env->offset.x   = env->win.dim.x / 2;
 	env->offset.y   = env->win.dim.y / 2;
-	env->zoom       = env->win.dim.x / env->map.dim.x / 2;
+	{
+		float diagonal = sqrt(env->map.dim.x * env->map.dim.x + env->map.dim.y * env->map.dim.y);
+		float x = env->win.dim.x / diagonal;
+		float y = env->win.dim.y / diagonal;
+		float z = env->win.dim.y / (env->map.z_max - env->map.z_min) / 2;
+		env->zoom   = MIN(x, y, z);
+	}
 	env->rotation.z = M_PI_4;
 	env->rotation.x = M_PI_4;
 	fdf_repaint(env);
 }
 
-void fdf_free(s_fdf_env* env)
+void fdf_free(t_fdf_env* env)
 {
 	free_window(&env->win);
 	fta_clear(&env->map.points);
@@ -35,8 +41,8 @@ static void free_fdf_array(t_array* self)
 int fdf_start(const char* program_name, const char* filename, t_dimension dim, const char* title)
 {
 	void*     mlx;
-	t_array   windows __attribute__((cleanup (free_fdf_array))) = NEW_ARRAY(s_fdf_env);
-	s_fdf_env fdf = NEW_FDF_ENV;
+	t_array   windows __attribute__((cleanup (free_fdf_array))) = NEW_ARRAY(t_fdf_env);
+	t_fdf_env fdf = NEW_FDF_ENV;
 
 	errno   = 0;
 	fdf.map = fdf_parse(filename);
