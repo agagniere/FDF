@@ -24,7 +24,17 @@ jobs:
         git submodule sync --recursive
         git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
     - name: Setup environment
-      run: test $(uname -s) = "Darwin" || { sudo apt-get update -q ; sudo apt-get -yq install locate libx11-dev libxext-dev libxpm-dev ; echo -e "\nHeaders locations :" ; ( locate Xlib.h ; ls /usr/include/X11/extensions ; locate XShm.h ) ; echo "Done" ; }
+      run: |
+        if test $(uname -s) != "Darwin" ;
+        then
+          sudo apt-get update -q
+          sudo apt-get -yq install locate libx11-dev libxext-dev libxpm-dev
+          echo -e "\nHeaders locations :"
+          locate Xlib.h
+          file /usr/include/X11/extensions/XShm.h
+          locate XShm.h
+          echo "Done"
+        fi
     - name: Compile
       run: make
     - name: Clean
