@@ -27,13 +27,10 @@ jobs:
       run: |
         if test $(uname -s) != "Darwin" ;
         then
-          sudo apt-get update -q
-          sudo apt-get -yq install locate libx11-dev libxext-dev libxpm-dev
-          echo -e "\nHeaders locations :"
-          locate Xlib.h
+          #sudo apt-get update -q
+          sudo apt-get -yq install libx11-dev libxext-dev #libxpm-dev
+          file /usr/include/X11/Xlib.h
           file /usr/include/X11/extensions/XShm.h
-          locate XShm.h
-          echo "Done"
         fi
     - name: Compile
       run: make
