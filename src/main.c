@@ -5,6 +5,16 @@
 #include <libft.h>
 #include <stdlib.h>
 
+#define USAGE_STRING													\
+	"Usage: fdf [OPTION]... FILE\n"										\
+	"\nOptions:\n"														\
+	"\t-w --width   INT  : set the window's width\n"					\
+	"\t-h --height  INT  : set the window's height\n"					\
+	"\t-t --title   STR  : set the window's title\n"					\
+	"\t-o --output  FILE : run in headlessmode, and output to a bmp\n"	\
+	"\t-v --version      : display the program's version and exit\n"	\
+	"\t--help            : display this usage message and exit"
+
 static void free_charp(char** variable)
 {
 	free(*variable);
@@ -44,13 +54,7 @@ int main(int ac, char** av)
 
 		if (is_long && ft_strequ(name, "help"))
 		{
-			ft_putendl("Usage: fdf [OPTION]... FILE");
-			ft_putendl("\nOptions:");
-			ft_putendl("\t-w --width    : set the window's width");
-			ft_putendl("\t-h --height   : set the window's height");
-			ft_putendl("\t-t --title    : set the window's title");
-			ft_putendl("\t-v --version  : display the program's version and exit");
-			ft_putendl("\t--help        : display this usage message and exit");
+			ft_putendl(USAGE_STRING);
 			return 0;
 		}
 		if (is_long ? ft_strequ(name, "version") : *name == 'v')
@@ -61,7 +65,7 @@ int main(int ac, char** av)
 		if (value == NULL)
 		{
 			ft_dprintf(2, "%s: Option \"%.*s\" requires an argument.\n", program_name, (is_long ? 30 : 1), name);
-			ft_dprintf(2, "Try '%s --help' for more information.\n", program_name);
+			ft_dprintf(2, USAGE_STRING "\n");
 			return 1;
 		}
 
@@ -77,9 +81,8 @@ int main(int ac, char** av)
 	}
 	if (ac == 0)
 	{
-		ft_dprintf(2, "Usage: fdf [OPTION]... FILE\n\n");
 		ft_dprintf(2, "You need to provide a filename.\n");
-		ft_dprintf(2, "Try '%s --help' for more information.\n", program_name);
+		ft_dprintf(2, USAGE_STRING "\n");
 		return 2;
 	}
 	return fdf_start(program_name, *av, dim, title);

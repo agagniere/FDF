@@ -35,7 +35,6 @@ MLX_CONFIG=$(MLX:.a=.mk)
 include $(MLX_CONFIG)
 
 CPPFLAGS+=-Wall -Wextra
-CPPFLAGS+=-g -O0
 CPPFLAGS+=$(addprefix -I,$(HEADER_PATH) $(LFT_PATH)/include $(MLX_PATH)/$(MLX_FOLDER))
 # ====================
 
@@ -46,11 +45,12 @@ include $(wildcard $(DEPFILES))
 $(MLX_CONFIG):
 	( cd $(@D) ; ./configure )
 
-$(NAME): $(OBJECTS) | $(LIBS)
+$(NAME): $(LIBS)
+$(NAME): $(OBJECTS)
 	$(CC) $^ $(LDFLAGS) $(LDLIBS) -o $@
 
 $(CACHE_PATH)/%.o: $(SOURCE_PATH)/%.c | $(CACHE_PATH)
-	$(CC) $(CPPFLAGS) -MMD -c $< -o $@
+	$(CC) $(CPPFLAGS) -MMD -c -o $@ $<
 
 %.a:
 	@make -C $(@D)

@@ -2,9 +2,11 @@
 
 #include <math.h>
 
+#ifndef SIMPLISTIC_TRANSFORM
+
 typedef t_real t_matrix;
 
-void add_rotation(t_matrix* m, t_real angle, int axe)
+static void add_rotation(t_matrix* m, t_real angle, int axe)
 {
 	const t_real s = sinf(angle);
 	const t_real c = cosf(angle);
@@ -54,7 +56,9 @@ t_array fdf_transform(t_fdf_env* env)
 	return result;
 }
 
-t_array fdf_transform_simplistic(t_fdf_env* env)
+#else
+
+t_array fdf_transform(t_fdf_env* env)
 {
 	t_array       result   = NEW_ARRAY(t_point3_int);
 	t_point3_int* iterator = ARRAY_ITERATOR(&env->map.points);
@@ -90,3 +94,5 @@ t_array fdf_transform_simplistic(t_fdf_env* env)
 	}
 	return result;
 }
+
+#endif
