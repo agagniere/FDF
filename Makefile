@@ -1,41 +1,41 @@
 NAME:=fdf.exe
 
 # Folders
-SOURCE_PATH:=src
-CACHE_PATH:=cache
-HEADER_PATH:=include
+SOURCE_PATH := src
+CACHE_PATH  := cache
+HEADER_PATH := include
 
 # Files
-FILES=$(shell find $(SOURCE_PATH) -name '*.c')
-OBJECTS=$(subst $(SOURCE_PATH),$(CACHE_PATH),$(FILES:.c=.o))
-DEPFILES=$(OBJECTS:.o=.d)
+FILES   = $(shell find $(SOURCE_PATH) -name '*.c')
+OBJECTS = $(subst $(SOURCE_PATH),$(CACHE_PATH),$(FILES:.c=.o))
+DEPFILES= $(OBJECTS:.o=.d)
 
 # ===== Libraries =====
-LFT_PATH:=Libft
-LFT_NAME:=ft
-LFT=$(LFT_PATH)/lib$(LFT_NAME).a
+LFT_PATH := Libft
+LFT_NAME := ft
+LFT = $(LFT_PATH)/lib$(LFT_NAME).a
 
-MLX_PATH:=MinilibX
-MLX_NAME:=mlx
-MLX=$(MLX_PATH)/lib$(MLX_NAME).a
+MLX_PATH := MinilibX
+MLX_NAME := mlx
+MLX = $(MLX_PATH)/lib$(MLX_NAME).a
 
-LIBS_NAME=$(LFT_NAME) $(MLX_NAME) m
-LIBS_PATH=$(LFT_PATH) $(MLX_PATH)
-LIBS=$(LFT) $(MLX)
+LIBS_NAME = $(LFT_NAME) $(MLX_NAME) m
+LIBS_PATH = $(LFT_PATH) $(MLX_PATH)
+LIBS = $(LFT) $(MLX)
 # =====================
 
 # ===== Compiler =====
 CC ?= gcc
 
-LDFLAGS+=$(addprefix -L,$(LIBS_PATH))
-LDLIBS+=$(addprefix -l,$(LIBS_NAME))
+LDFLAGS += $(addprefix -L,$(LIBS_PATH))
+LDLIBS  += $(addprefix -l,$(LIBS_NAME))
 
 # Configuration results
-MLX_CONFIG=$(MLX:.a=.mk)
+MLX_CONFIG = $(MLX:.a=.mk)
 include $(MLX_CONFIG)
 
-CPPFLAGS+=-Wall -Wextra
-CPPFLAGS+=$(addprefix -I,$(HEADER_PATH) $(LFT_PATH)/include $(MLX_PATH)/$(MLX_FOLDER))
+CPPFLAGS += -Wall -Wextra
+CPPFLAGS += $(addprefix -I,$(HEADER_PATH) $(LFT_PATH)/include $(MLX_PATH)/$(MLX_FOLDER))
 # ====================
 
 all: $(NAME)
