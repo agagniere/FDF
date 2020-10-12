@@ -25,6 +25,7 @@ int main(int ac, char** av)
 	const char* program_name = *av;
 	t_dimension dim = MAKE_POINT(unsigned, 1280, 720);
 	char*       title __attribute__((cleanup (free_charp))) = ft_strdup("Fil de Fer");
+	char*       out_file __attribute__((cleanup (free_charp))) = ft_strdup("");
 
 	while (ac-- > 0 && *++av != NULL)
 	{
@@ -65,7 +66,7 @@ int main(int ac, char** av)
 		if (value == NULL)
 		{
 			ft_dprintf(2, "%s: Option \"%.*s\" requires an argument.\n", program_name, (is_long ? 30 : 1), name);
-			ft_dprintf(2, USAGE_STRING "\n");
+			ft_putendl_fd(USAGE_STRING, 2);
 			return 1;
 		}
 
@@ -78,12 +79,19 @@ int main(int ac, char** av)
 			free(title);
 			title = ft_strdup(value);
 		}
+		else if (is_long ? ft_strequ(name, "output") : *name == 'o')
+		{
+			free(title);
+			out_file = ft_strdup(value);
+		}
 	}
 	if (ac == 0)
 	{
-		ft_dprintf(2, "You need to provide a filename.\n");
-		ft_dprintf(2, USAGE_STRING "\n");
+		ft_putendl_fd("You need to provide a filename.\n" USAGE_STRING, 2);
 		return 2;
 	}
-	return fdf_start(program_name, *av, dim, title);
+	if (*out_file != '\0')
+		return headless(dim, out_file);
+	else
+		return fdf_start(program_name, *av, dim, title);
 }
