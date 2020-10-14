@@ -13,14 +13,14 @@
 
 void fdf_init(t_fdf_env* env)
 {
-	env->offset.x   = env->win.dim.x / 2;
-	env->offset.y   = env->win.dim.y / 2;
+	env->offset.x = env->win.dim.x / 2;
+	env->offset.y = env->win.dim.y / 2;
 	{
 		float diagonal = sqrt(env->map.dim.x * env->map.dim.x + env->map.dim.y * env->map.dim.y);
-		float x = env->win.dim.x / diagonal;
-		float y = env->win.dim.y / diagonal;
-		float z = env->win.dim.y / (env->map.z_max - env->map.z_min) / 2;
-		env->zoom   = MIN(x, y, z);
+		float x   = env->win.dim.x / diagonal;
+		float y   = env->win.dim.y / diagonal;
+		float z   = env->win.dim.y / (env->map.z_max - env->map.z_min) / 2;
+		env->zoom = MIN(x, y, z);
 	}
 	env->rotation.z = M_PI_4;
 	env->rotation.x = M_PI_4;
@@ -41,7 +41,7 @@ static void free_fdf_array(t_array* self)
 int fdf_start(const char* program_name, const char* filename, t_dimension dim, const char* title)
 {
 	void*     mlx;
-	t_array   windows __attribute__((cleanup (free_fdf_array))) = NEW_ARRAY(t_fdf_env);
+	t_array   windows __attribute__((cleanup(free_fdf_array))) = NEW_ARRAY(t_fdf_env);
 	t_fdf_env fdf = NEW_FDF_ENV;
 
 	errno   = 0;

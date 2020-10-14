@@ -5,10 +5,10 @@
 
 t_color_hsl hsl_from_rgb(t_color_rgb rgb)
 {
-	const unsigned min = MIN(rgb.red, rgb.green, rgb.blue);
-	const unsigned max = MAX(rgb.red, rgb.green, rgb.blue);
+	const unsigned min    = MIN(rgb.red, rgb.green, rgb.blue);
+	const unsigned max    = MAX(rgb.red, rgb.green, rgb.blue);
 	const float    chroma = max - min;
-	t_color_hsl    hsl = {0, 0, (min + chroma / 2) / 255.};
+	t_color_hsl    hsl    = {0, 0, (min + chroma / 2.) / 255.};
 
 	if (chroma > 0)
 	{

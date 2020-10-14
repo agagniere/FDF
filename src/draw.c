@@ -25,10 +25,7 @@ void draw_line(t_window* win, t_point2_int from, t_point2_int to, int color)
 	int          i             = 0;
 
 	if (!is_in_frame(win, from.x, from.y) && !is_in_frame(win, to.x, to.y))
-	{
-		ft_dprintf(2, "%s aborted because both points are off bounds.\n", __FUNCTION__);
 		return;
-	}
 	while (i != max)
 	{
 		if (is_horizontal)
