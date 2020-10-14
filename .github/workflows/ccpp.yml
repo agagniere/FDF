@@ -24,8 +24,10 @@ jobs:
         git submodule sync --recursive
         git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
     - name: Install dependencies
-      run: test $(uname -s) = "Darwin" || sudo apt-get -yq install libx11-dev libxext-dev
+      run: test $(uname -s) = "Darwin" || sudo apt-get -yq install libx11-dev libxext-dev libxpm-dev
     - name: Compile
       run: make
     - name: Clean
-      run: make fclean
+      run: |
+        make clean
+        git clean -xdf

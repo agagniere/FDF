@@ -5,12 +5,12 @@ Wireframe rendering of heightmaps.
 
 ## Download
 Because this repository has submodules, it is convenient to use:
-```
+``` bash
 git clone --recursive
 ```
 
 ## Build
-```
+``` bash
 make
 ```
 It will run the MinilibX `./configure` and compile the whole project.
