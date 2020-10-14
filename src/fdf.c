@@ -24,7 +24,6 @@ void fdf_init(t_fdf_env* env)
 	}
 	env->rotation.z = M_PI_4;
 	env->rotation.x = M_PI_4;
-	fdf_repaint(env);
 }
 
 void fdf_free(t_fdf_env* env)
@@ -60,6 +59,8 @@ int fdf_start(const char* program_name, const char* filename, t_dimension dim, c
 	}
 	mlx_do_key_autorepeaton(mlx);
 	fdf_init(&fdf);
+	fdf_repaint(&fdf);
+	fdf_expose(&fdf.win);
 	mlx_loop(mlx);
 	return 0;
 }

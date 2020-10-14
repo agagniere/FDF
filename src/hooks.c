@@ -38,7 +38,6 @@ int fdf_repaint(t_fdf_env* env)
 	clock_gettime(CLOCK_REALTIME, &after);
 	ft_printf("%lu\n", after.tv_nsec - before.tv_nsec);
 	fta_clear(&screen_points);
-	fdf_expose(&env->win);
 	return 0;
 }
 
@@ -64,5 +63,6 @@ int fdf_key_press(int key, t_fdf_env* env)
 	default:               return 0;
 	}
 	fdf_repaint(env);
+	fdf_expose(&env->win);
 	return 0;
 }
