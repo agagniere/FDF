@@ -81,7 +81,7 @@ int main(int ac, char** av)
 		}
 		else if (is_long ? ft_strequ(name, "output") : *name == 'o')
 		{
-			free(title);
+			free(out_file);
 			out_file = ft_strdup(value);
 		}
 	}

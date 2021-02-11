@@ -7,7 +7,7 @@ const int INFO_HEADER_SIZE = 40;
 unsigned char *createBitmapFileHeader(int height, int stride);
 unsigned char *createBitmapInfoHeader(int height, int width);
 
-void generateBitmapImage(unsigned char* image, int height, int width, char* imageFileName) {
+void generateBitmapImage(const unsigned char* image, int height, int width, const char* imageFileName) {
   int widthInBytes = width * BYTES_PER_PIXEL;
   unsigned char padding[3] = {0, 0, 0};
   int paddingSize = (4 - (widthInBytes) % 4) % 4;
