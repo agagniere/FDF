@@ -19,7 +19,8 @@ void generateBitmapImage(const unsigned char* image, int height, int width, cons
 
   fwrite(fileHeader, 1, FILE_HEADER_SIZE, imageFile);
   fwrite(infoHeader, 1, INFO_HEADER_SIZE, imageFile);
-  for (i = 0; i < height; i++) {
+  i = height;
+  while (i --> 0) {
     fwrite(image + (i * widthInBytes), BYTES_PER_PIXEL, width, imageFile);
     fwrite(padding, 1, paddingSize, imageFile);
   }
