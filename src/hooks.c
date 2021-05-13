@@ -32,8 +32,8 @@ int fdf_repaint(t_fdf_env* env)
 			fdf_draw_gradient(env, GET(i), GET(i - 1));
 		if (i / env->map.dim.x > 0)
 			fdf_draw_gradient(env, GET(i), GET(i - env->map.dim.x));
-		if (i % env->map.dim.x > 0 && i / env->map.dim.x > 0)
-			fdf_draw_gradient(env, GET(i - 1), GET(i - env->map.dim.x));
+//		if (i % env->map.dim.x > 0 && i / env->map.dim.x > 0)
+//			fdf_draw_gradient(env, GET(i - 1), GET(i - env->map.dim.x));
 	}
 	clock_gettime(CLOCK_REALTIME, &after);
 	ft_printf("%lu\n", after.tv_nsec - before.tv_nsec);

@@ -5,8 +5,8 @@
 
 #include <ft_array.h>
 
-#define SET_FLOAT_PRECISION(T)           \
-	typedef T                 t_real;    \
+#define SET_FLOAT_PRECISION(T)	  \
+	typedef T                 t_real; \
 	typedef struct point2_##T t_complex; \
 	typedef struct point3_##T t_3Dpoint
 

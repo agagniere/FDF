@@ -13,7 +13,7 @@ bool make_window(t_window* out, void* mlx, t_dimension dim, const char* name, t_
 	if (out->mlx_win == NULL || out->mlx_img == NULL)
 		return false;
 	out->pixels = (uint8_t*)mlx_get_data_addr(out->mlx_img, &(out->bit_per_pixel),
-											  &(out->line_size), &(out->endian));
+	                                          &(out->line_size), &(out->endian));
 	if (hooks.expose)
 		mlx_expose_hook(out->mlx_win, hooks.expose, out);
 	if (hooks.key_press)
