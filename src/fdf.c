@@ -53,8 +53,8 @@ int fdf_start(const char* program_name, const char* filename, t_dimension dim, c
 		return 3;
 	}
 	if ((mlx = mlx_init()) == NULL
-		|| !make_window(&fdf.win, mlx, dim, title, FDF_HOOKS)
-		|| fta_append(&windows, &fdf, 1) != 0)
+	    || !make_window(&fdf.win, mlx, dim, title, FDF_HOOKS)
+	    || fta_append(&windows, &fdf, 1) != 0)
 	{
 		ft_dprintf(2, "%s: MLX initialization failure\n", program_name);
 		return 4;

@@ -5,15 +5,14 @@
 #include <libft.h>
 #include <stdlib.h>
 
-#define USAGE_STRING													\
-	"Usage: fdf [OPTION]... FILE\n"										\
-	"\nOptions:\n"														\
-	"\t-w --width   INT  : set the window's width\n"					\
-	"\t-h --height  INT  : set the window's height\n"					\
-	"\t-t --title   STR  : set the window's title\n"					\
-	"\t-o --output  FILE : run in headlessmode, and output to a bmp\n"	\
-	"\t-v --version      : display the program's version and exit\n"	\
-	"\t--help            : display this usage message and exit"
+#define OPTIONS_STRING \
+	"Options:\n" \
+	"  -w, --width=INT    set the window's width\n" \
+	"  -h, --height=INT   set the window's height\n" \
+	"  -t, --title=STR    set the window's title\n" \
+	"  -o, --output=FILE  run in headlessmode, and output to a bmp\n" \
+	"  -v, --version      display the program's version and exit\n" \
+	"      --help         display this usage message and exit"
 
 static void free_charp(char** variable)
 {
@@ -55,18 +54,18 @@ int main(int ac, char** av)
 
 		if (is_long && ft_strequ(name, "help"))
 		{
-			ft_putendl(USAGE_STRING);
+			ft_printf("Usage: %s [OPTION]... FILE\n\n%s\n", program_name, OPTIONS_STRING);
 			return 0;
 		}
 		if (is_long ? ft_strequ(name, "version") : *name == 'v')
 		{
-			ft_putendl("Fil de Fer version 1.0");
+			ft_putendl("FilDeFer 1.0");
 			return 0;
 		}
 		if (value == NULL)
 		{
 			ft_dprintf(2, "%s: Option \"%.*s\" requires an argument.\n", program_name, (is_long ? 30 : 1), name);
-			ft_putendl_fd(USAGE_STRING, 2);
+			ft_dprintf(2, "Usage: %s [OPTION]... FILE\n\n%s\n", program_name, OPTIONS_STRING);
 			return 1;
 		}
 
@@ -87,7 +86,8 @@ int main(int ac, char** av)
 	}
 	if (ac == 0)
 	{
-		ft_putendl_fd("You need to provide a filename.\n" USAGE_STRING, 2);
+		ft_putendl_fd("You need to provide a filename.\n", 2);
+		ft_dprintf(2, "Usage: %s [OPTION]... FILE\n\n%s\n", program_name, OPTIONS_STRING);
 		return 2;
 	}
 	if (*out_file != '\0')
