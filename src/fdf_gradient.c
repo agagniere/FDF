@@ -9,6 +9,7 @@ int fdf_color(t_fdf_env* env, int altitude)
 	t_color_rgb color_a, color_b;
 	t_color_rgb result;
 	int max;
+	int i = 3;
 
 	if (altitude < 0)
 	{
@@ -22,7 +23,8 @@ int fdf_color(t_fdf_env* env, int altitude)
 		color_a = env->pallette.bottom;
 		color_b = env->pallette.top;
 	}
-	int i = 3;
+	if (max == 0)
+		return color_a.color;
 	while (i --> 0)
 		result.components[i] = lerp(color_a.components[i], color_b.components[i], altitude, max);
 	return result.color;

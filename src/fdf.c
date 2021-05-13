@@ -13,17 +13,19 @@
 
 void fdf_init(t_fdf_env* env)
 {
-	env->offset.x = env->win.dim.x / 2;
-	env->offset.y = env->win.dim.y / 2;
-	{
-		float diagonal = sqrt(env->map.dim.x * env->map.dim.x + env->map.dim.y * env->map.dim.y);
-		float x   = env->win.dim.x / diagonal;
-		float y   = env->win.dim.y / diagonal;
-		float z   = env->win.dim.y / (env->map.z_max - env->map.z_min) / 2;
-		env->zoom = MIN(x, y, z);
-	}
+	const float height = env->map.z_max - env->map.z_min;
+	const float diagonal = sqrt(env->map.dim.x * env->map.dim.x + env->map.dim.y * env->map.dim.y);
+	const float x = env->win.dim.x / diagonal;
+	const float y = env->win.dim.y / diagonal;
+	const float z = env->win.dim.y / height;
+	const float zoom = MIN(x, y, z);
+	const float mid_height_onscreen = zoom * (env->map.z_min + env->map.z_max) / 2;
+
+	env->zoom = zoom;
 	env->rotation.z = M_PI_4;
 	env->rotation.x = M_PI_4;
+	env->offset.x = env->win.dim.x / 2;
+	env->offset.y = env->win.dim.y / 2 + mid_height_onscreen / 2;
 }
 
 void fdf_free(t_fdf_env* env)
