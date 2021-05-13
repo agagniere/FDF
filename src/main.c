@@ -14,6 +14,9 @@
 	"  -v, --version      display the program's version and exit\n" \
 	"      --help         display this usage message and exit"
 
+#define USAGE(FD, NAME)	ft_dprintf(FD, "Usage: %s [OPTION]... FILE\n\n%s\n", NAME, OPTIONS_STRING)
+
+
 static void free_charp(char** variable)
 {
 	free(*variable);
@@ -54,7 +57,7 @@ int main(int ac, char** av)
 
 		if (is_long && ft_strequ(name, "help"))
 		{
-			ft_printf("Usage: %s [OPTION]... FILE\n\n%s\n", program_name, OPTIONS_STRING);
+			USAGE(1, program_name);
 			return 0;
 		}
 		if (is_long ? ft_strequ(name, "version") : *name == 'v')
@@ -65,7 +68,7 @@ int main(int ac, char** av)
 		if (value == NULL)
 		{
 			ft_dprintf(2, "%s: Option \"%.*s\" requires an argument.\n", program_name, (is_long ? 30 : 1), name);
-			ft_dprintf(2, "Usage: %s [OPTION]... FILE\n\n%s\n", program_name, OPTIONS_STRING);
+			USAGE(2, program_name);
 			return 1;
 		}
 
@@ -87,7 +90,7 @@ int main(int ac, char** av)
 	if (ac == 0)
 	{
 		ft_putendl_fd("You need to provide a filename.\n", 2);
-		ft_dprintf(2, "Usage: %s [OPTION]... FILE\n\n%s\n", program_name, OPTIONS_STRING);
+		USAGE(2, program_name);
 		return 2;
 	}
 	if (*out_file != '\0')
