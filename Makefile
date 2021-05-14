@@ -66,7 +66,7 @@ fclean: clean
 	$(RM) -r $(NAME) $(DOC_PATH)
 
 fbuild: fclean
-	@$(MAKE) all --no-print-directory
+	@$(MAKE) build --no-print-directory
 
 man: $(DOC_PATH)/$(NAME:%.exe=%.1)
 

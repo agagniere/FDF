@@ -58,3 +58,9 @@ dkms.conf
 # Man pages
 *.1
 *.pdf
+
+# Images
+*.bmp
+*.jpg
+*.png
+*.xpm
