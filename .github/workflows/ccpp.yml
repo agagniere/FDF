@@ -12,7 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
+        os: [macos-latest, ubuntu-18.04, ubuntu-20.04]
 
     steps:
     - name: Download source files
@@ -24,9 +24,13 @@ jobs:
         git submodule sync --recursive
         git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
     - name: Install dependencies
-      run: test $(uname -s) = "Darwin" || sudo apt-get -yq install libx11-dev libxext-dev libxpm-dev
+      run: |
+        test $(uname -s) = "Darwin" || sudo apt-get -yq install libx11-dev libxext-dev libxpm-dev ghostscript help2man
+        test $(uname -s) != "Darwin" || brew install ghostscript help2man
     - name: Compile
       run: make
+    - name: Generate documentation
+      run: make pdf
     - name: Clean
       run: |
         make clean
