@@ -24,10 +24,20 @@ jobs:
         test $(uname -s) = "Darwin" || sudo apt-get -yq install libx11-dev libxext-dev libxpm-dev ghostscript help2man
         test $(uname -s) != "Darwin" || brew install ghostscript help2man
     - name: Compile
-      run: make
+      run: make build
     - name: Generate documentation
       run: make pdf
+    - name: Run
+      run: |
+        ./fdf.exe --output=doc/42.bmp maps/42.fdf
+        ./fdf.exe --output=doc/mars.bmp maps/mars.fdf
+        ./fdf.exe --output=doc/pylone.bmp maps/pylone.fdf
+    - name: Upload output
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: FDF_doc
+        path: doc
     - name: Clean
       run: |
-        make clean
+        make fclean
         git clean -xdf
