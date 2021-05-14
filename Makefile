@@ -39,7 +39,7 @@ CPPFLAGS += -Wall -Wextra -g
 CPPFLAGS += $(addprefix -I,$(HEADER_PATH) $(LFT_PATH)/include $(MLX_PATH)/$(MLX_FOLDER))
 # ====================
 
-all: $(NAME)
+build: $(NAME)
 
 include $(wildcard $(DEPFILES))
 
@@ -65,7 +65,7 @@ clean:
 fclean: clean
 	$(RM) -r $(NAME) $(DOC_PATH)
 
-re: fclean
+fbuild: fclean
 	@$(MAKE) all --no-print-directory
 
 man: $(DOC_PATH)/$(NAME:%.exe=%.1)
@@ -78,4 +78,4 @@ $(DOC_PATH)/fdf.1: $(NAME) | $(DOC_PATH)
 %.pdf: %.1
 	man -t $< | ps2pdf - $@
 
-.PHONY: all clean fclean re man pdf
+.PHONY: build clean fclean fbuild man pdf
