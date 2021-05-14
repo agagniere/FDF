@@ -9,7 +9,6 @@ int headless(const char* program_name, const char* input_file_name, t_dimension 
 {
 	t_fdf_env fdf = NEW_FDF_ENV;
 
-	ft_dprintf(2, "%s(%s, %s, %s)\n", __FUNCTION__, program_name, input_file_name, output_file_name);
 	fdf.win.dim = dim;
 	fdf.map = fdf_parse(input_file_name);
 	fdf_init(&fdf);
