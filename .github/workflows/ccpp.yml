@@ -12,17 +12,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-18.04, ubuntu-20.04]
+        os: [macos-latest]
 
     steps:
     - name: Download source files
       uses: actions/checkout@v2
-    - name: Checkout submodules
-      shell: bash
-      run: |
-        auth_header="$(git config --local --get http.https://github.com/.extraheader)"
-        git submodule sync --recursive
-        git -c "http.extraheader=$auth_header" -c protocol.version=2 submodule update --init --force --recursive --depth=1
+      with:
+        submodules: recursive
     - name: Install dependencies
       run: |
         test $(uname -s) = "Darwin" || sudo apt-get -yq install libx11-dev libxext-dev libxpm-dev ghostscript help2man
