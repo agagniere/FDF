@@ -27,8 +27,8 @@ do
 	for TRANSFORM in "" "-DSIMPLISTIC_TRANSFORM"
 	do
 		CPPFLAGS="$TRANSFORM -O$OPT" make build
+		./fdf.exe --width=256 --height=256 --benchmark=1024 --output=/dev/null $map >> ${folder}/${name}-O${OPT}${TRANSFORM}.out
 		touch src/transform.c # force recompilation of the file affected by the define
-		./fdf.exe --width=512 --height=512 --benchmark=1024 --output=/dev/null $map >> ${folder}/${name}-O${OPT}${TRANSFORM}.out
 		Targets=("${Targets[@]}" "\"${folder}/${name}-O${OPT}${TRANSFORM}.out\" using (column(2) / column(1)) with lines title '-O${OPT} ${TRANSFORM}'")
 	done
 done
