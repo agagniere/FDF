@@ -1,7 +1,8 @@
 # Compile with different flags to compare performance
 
 map="maps/mars.fdf"
-folder="benchmark_output"
+folder="/tmp/fdf_benchmark"
+
 if test -n "$1"
 then
 	map=$1
@@ -15,15 +16,18 @@ if ! test -d "$folder"
 then
 	mkdir -p $folder
 fi
+gnuplot_script=$folder/"render.gnuplot"
+echo -n > $gnuplot_script
 
 make build # For submodules
-for OPT in 0 s 1 2 3 fast
+for OPT in 0 s 2 fast
 do
 	make clean # Force recompilation of all files
 	for TRANSFORM in "" "-DSIMPLISTIC_TRANSFORM"
 	do
 		CPPFLAGS="$TRANSFORM -O$OPT" make build
 		touch src/transform.c # force recompilation of the file affected by the define
-		./fdf.exe --width=1200 --height=900 --benchmark=1024 --output=${folder}/${name}.bmp $map >> ${folder}/${name}-O${OPT}${TRANSFORM}.out
+		./fdf.exe --width=512 --height=512 --benchmark=1024 --output=/dev/null $map >> ${folder}/${name}-O${OPT}${TRANSFORM}.out
+		echo '"'${folder}/${name}-O${OPT}${TRANSFORM}.out'"' using "(column(2) / column(1))" with lines title "'-O${OPT} ${TRANSFORM}'" >> $gnuplot_script
 	done
 done
