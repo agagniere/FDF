@@ -54,7 +54,7 @@ void fdf_init(t_fdf_env* env);
 void fdf_free(t_fdf_env* env);
 
 int  fdf_start(const char* program_name, const char* filename, t_dimension dim, const char* title);
-int  headless(const char* program_name, const char* input_file_name, t_dimension dim, const char* output_file_name, int benchmark_iterations);
+int  headless(const char* input_file_name, t_dimension dim, const char* output_file_name, int benchmark_iterations);
 
 /*
 ** FDF::parse

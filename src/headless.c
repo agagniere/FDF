@@ -5,7 +5,7 @@
 
 #include <stdlib.h>
 
-int headless(const char* program_name, const char* input_file_name, t_dimension dim, const char* output_file_name, int benchmark_iterations)
+int headless(const char* input_file_name, t_dimension dim, const char* output_file_name, int benchmark_iterations)
 {
 	t_fdf_env fdf = NEW_FDF_ENV;
 

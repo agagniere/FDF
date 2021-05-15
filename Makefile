@@ -1,3 +1,5 @@
+MAKEFLAGS += -j
+
 NAME:=fdf.exe
 
 # Folders

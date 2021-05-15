@@ -102,7 +102,7 @@ int main(int ac, char** av)
 		return 2;
 	}
 	if (*out_file != '\0')
-		return headless(program_name, *av, dim, out_file, benchmark_iterations);
+		return headless(*av, dim, out_file, benchmark_iterations);
 	else
 		return fdf_start(program_name, *av, dim, title);
 }
