@@ -1,9 +1,12 @@
+MAKEFLAGS += -j
+
 NAME:=fdf.exe
 
 # Folders
 SOURCE_PATH := src
 CACHE_PATH  := cache
 HEADER_PATH := include
+DOC_PATH    := doc
 
 # Files
 FILES   = $(shell find $(SOURCE_PATH) -name '*.c')
@@ -34,11 +37,11 @@ LDLIBS  += $(addprefix -l,$(LIBS_NAME))
 MLX_CONFIG = $(MLX:.a=.mk)
 include $(MLX_CONFIG)
 
-CPPFLAGS += -Wall -Wextra
+CPPFLAGS += -Wall -Wextra -g
 CPPFLAGS += $(addprefix -I,$(HEADER_PATH) $(LFT_PATH)/include $(MLX_PATH)/$(MLX_FOLDER))
 # ====================
 
-all: $(NAME)
+build: $(NAME)
 
 include $(wildcard $(DEPFILES))
 
@@ -55,20 +58,28 @@ $(CACHE_PATH)/%.o: $(SOURCE_PATH)/%.c | $(CACHE_PATH)
 %.a:
 	@make -C $(@D)
 
-$(CACHE_PATH):
+$(CACHE_PATH) $(DOC_PATH):
 	mkdir $@
-
-test:
-	@echo -e $(IFLAG)
-	@echo objects $(OBJECTS)
 
 clean:
 	$(RM) -r $(CACHE_PATH)
+	$(MAKE) -C $(MLX_PATH) $@ --no-print-directory
+	$(MAKE) -C $(LFT_PATH) $@ --no-print-directory
 
 fclean: clean
 	$(RM) $(NAME)
 
-re: fclean
-	@$(MAKE) all --no-print-directory
+fbuild: fclean
+	@$(MAKE) build --no-print-directory
 
-.PHONY: all clean fclean re
+man: $(DOC_PATH)/$(NAME:%.exe=%.1)
+
+pdf: $(DOC_PATH)/$(NAME:%.exe=%.pdf)
+
+$(DOC_PATH)/fdf.1: $(NAME) | $(DOC_PATH)
+	help2man --no-info ./$< --output $@
+
+%.pdf: %.1
+	man -t $< | ps2pdf - $@
+
+.PHONY: build clean fclean fbuild man pdf

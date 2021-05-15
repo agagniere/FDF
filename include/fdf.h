@@ -5,8 +5,8 @@
 
 #include <ft_array.h>
 
-#define SET_FLOAT_PRECISION(T)           \
-	typedef T                 t_real;    \
+#define SET_FLOAT_PRECISION(T)	  \
+	typedef T                 t_real; \
 	typedef struct point2_##T t_complex; \
 	typedef struct point3_##T t_3Dpoint
 
@@ -54,6 +54,7 @@ void fdf_init(t_fdf_env* env);
 void fdf_free(t_fdf_env* env);
 
 int  fdf_start(const char* program_name, const char* filename, t_dimension dim, const char* title);
+int  headless(const char* input_file_name, t_dimension dim, const char* output_file_name, int benchmark_iterations);
 
 /*
 ** FDF::parse

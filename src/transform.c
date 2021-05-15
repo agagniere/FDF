@@ -12,7 +12,7 @@ static void add_rotation(t_matrix* m, t_real angle, int axe)
 	const t_real c = cosf(angle);
 	t_matrix b[9] = { c, -s,  s,
 	                  s,  c, -s,
-	                 -s,  s,  c};
+	                  -s, s,  c};
 	t_matrix r[9];
 	int i = 3;
 

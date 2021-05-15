@@ -5,15 +5,22 @@
 #include <libft.h>
 #include <stdlib.h>
 
-#define USAGE_STRING													\
-	"Usage: fdf [OPTION]... FILE\n"										\
-	"\nOptions:\n"														\
-	"\t-w --width   INT  : set the window's width\n"					\
-	"\t-h --height  INT  : set the window's height\n"					\
-	"\t-t --title   STR  : set the window's title\n"					\
-	"\t-o --output  FILE : run in headlessmode, and output to a bmp\n"	\
-	"\t-v --version      : display the program's version and exit\n"	\
-	"\t--help            : display this usage message and exit"
+#define OPTIONS_STRING \
+	"Options:\n" \
+	"Global:\n" \
+	"  -w, --width=INT      set the window's width\n" \
+	"  -h, --height=INT     set the window's height\n" \
+	"Graphical mode:\n" \
+	"  -t, --title=STR      set the window's title\n" \
+	"Headless:\n" \
+	"  -o, --output=FILE    run in headlessmode, and output to a bmp\n" \
+	"  -b, --benchmark=INT  in headless mode, render the frame INT times\n" \
+	"Misc:\n"\
+	"  -v, --version        display the program's version and exit\n" \
+	"      --help           display this usage message and exit"
+
+#define USAGE(FD, NAME)	ft_dprintf(FD, "Usage: %s [OPTION]... FILE\n\n%s\n", NAME, OPTIONS_STRING)
+
 
 static void free_charp(char** variable)
 {
@@ -25,6 +32,8 @@ int main(int ac, char** av)
 	const char* program_name = *av;
 	t_dimension dim = MAKE_POINT(unsigned, 1280, 720);
 	char*       title __attribute__((cleanup (free_charp))) = ft_strdup("Fil de Fer");
+	char*       out_file __attribute__((cleanup (free_charp))) = ft_strdup("");
+	int         benchmark_iterations = 1;
 
 	while (ac-- > 0 && *++av != NULL)
 	{
@@ -54,18 +63,18 @@ int main(int ac, char** av)
 
 		if (is_long && ft_strequ(name, "help"))
 		{
-			ft_putendl(USAGE_STRING);
+			USAGE(1, program_name);
 			return 0;
 		}
 		if (is_long ? ft_strequ(name, "version") : *name == 'v')
 		{
-			ft_putendl("Fil de Fer version 1.0");
+			ft_putendl("FilDeFer 1.0");
 			return 0;
 		}
 		if (value == NULL)
 		{
 			ft_dprintf(2, "%s: Option \"%.*s\" requires an argument.\n", program_name, (is_long ? 30 : 1), name);
-			ft_dprintf(2, USAGE_STRING "\n");
+			USAGE(2, program_name);
 			return 1;
 		}
 
@@ -78,12 +87,22 @@ int main(int ac, char** av)
 			free(title);
 			title = ft_strdup(value);
 		}
+		else if (is_long ? ft_strequ(name, "output") : *name == 'o')
+		{
+			free(out_file);
+			out_file = ft_strdup(value);
+		}
+		else if (is_long ? ft_strequ(name, "benchmark") : *name == 'b')
+			benchmark_iterations = ft_atoi(value);
 	}
 	if (ac == 0)
 	{
-		ft_dprintf(2, "You need to provide a filename.\n");
-		ft_dprintf(2, USAGE_STRING "\n");
+		ft_putendl_fd("You need to provide a filename.\n", 2);
+		USAGE(2, program_name);
 		return 2;
 	}
-	return fdf_start(program_name, *av, dim, title);
+	if (*out_file != '\0')
+		return headless(*av, dim, out_file, benchmark_iterations);
+	else
+		return fdf_start(program_name, *av, dim, title);
 }
