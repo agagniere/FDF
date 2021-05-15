@@ -1,4 +1,4 @@
-set terminal png size 1920,1080
+set terminal png size 2560,1440
 set output 'benchmark_graph.png'
 
 set title 'Comparing transform algorithms and optimization flags'

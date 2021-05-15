@@ -37,7 +37,7 @@ LDLIBS  += $(addprefix -l,$(LIBS_NAME))
 MLX_CONFIG = $(MLX:.a=.mk)
 include $(MLX_CONFIG)
 
-CPPFLAGS += -Wall -Wextra -g
+CPPFLAGS ?= -Wall -Wextra -g
 CPPFLAGS += $(addprefix -I,$(HEADER_PATH) $(LFT_PATH)/include $(MLX_PATH)/$(MLX_FOLDER))
 # ====================
 
@@ -63,6 +63,8 @@ $(CACHE_PATH) $(DOC_PATH):
 
 clean:
 	$(RM) -r $(CACHE_PATH)
+	$(MAKE) -C $(MLX_PATH) $@ --no-print-directory
+	$(MAKE) -C $(LFT_PATH) $@ --no-print-directory
 
 fclean: clean
 	$(RM) -r $(NAME) $(DOC_PATH)
