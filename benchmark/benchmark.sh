@@ -17,7 +17,8 @@ then
 	mkdir -p $folder
 fi
 gnuplot_script=$folder/"render.gnuplot"
-echo -n > $gnuplot_script
+cp benchmark/header.gnuplot $gnuplot_script
+declare -a Targets=()
 
 make build # For submodules
 for OPT in 0 s 2 fast
@@ -28,6 +29,11 @@ do
 		CPPFLAGS="$TRANSFORM -O$OPT" make build
 		touch src/transform.c # force recompilation of the file affected by the define
 		./fdf.exe --width=512 --height=512 --benchmark=1024 --output=/dev/null $map >> ${folder}/${name}-O${OPT}${TRANSFORM}.out
-		echo '"'${folder}/${name}-O${OPT}${TRANSFORM}.out'"' using "(column(2) / column(1))" with lines title "'-O${OPT} ${TRANSFORM}'" >> $gnuplot_script
+		Targets=("${Targets[@]}" "\"${folder}/${name}-O${OPT}${TRANSFORM}.out\" using (column(2) / column(1)) with lines title '-O${OPT} ${TRANSFORM}'")
 	done
 done
+
+IFS=,
+echo -n "plot [4:1004][0:100] " >> $gnuplot_script
+echo "${Targets[*]}" >> $gnuplot_script
+gnuplot "$gnuplot_script"
