@@ -23,7 +23,7 @@ declare -a Targets=()
 make build # For submodules
 for OPT in 0 s 2 fast
 do
-	make clean # Force recompilation of all files
+	make fclean # Force recompilation of all files
 	for TRANSFORM in "" "-DSIMPLISTIC_TRANSFORM"
 	do
 		CPPFLAGS="$TRANSFORM -O$OPT" make build
