@@ -67,7 +67,7 @@ clean:
 	$(MAKE) -C $(LFT_PATH) $@ --no-print-directory
 
 fclean: clean
-	$(RM) -r $(NAME)
+	$(RM) $(NAME)
 
 fbuild: fclean
 	@$(MAKE) build --no-print-directory
