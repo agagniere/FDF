@@ -21,8 +21,8 @@ jobs:
         submodules: recursive
     - name: Install dependencies
       run: |
-        test $(uname -s) = "Darwin" || sudo apt-get -yq install libx11-dev libxext-dev libxpm-dev ghostscript help2man
-        test $(uname -s) != "Darwin" || brew install ghostscript help2man
+        test $(uname -s) = "Darwin" || sudo apt-get -yq install libx11-dev libxext-dev libxpm-dev ghostscript help2man gnuplot
+        test $(uname -s) != "Darwin" || brew install ghostscript help2man gnuplot
     - name: Compile
       run: make build
     - name: Generate documentation
