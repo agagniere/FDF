@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define CLOCK CLOCK_MONOTONIC_RAW
+
 int fdf_expose(t_window* win)
 {
 	mlx_put_image_to_window(win->mlx_ptr, win->mlx_win, win->mlx_img, 0, 0);
@@ -18,14 +20,14 @@ int fdf_expose(t_window* win)
 int fdf_repaint(t_fdf_env* env)
 {
 	struct timespec before, after;
-	clock_gettime(CLOCK_REALTIME, &before);
+	clock_gettime(CLOCK, &before);
 	t_array screen_points = fdf_transform(env);
-	clock_gettime(CLOCK_REALTIME, &after);
+	clock_gettime(CLOCK, &after);
 	unsigned i = screen_points.size;
 
-	ft_printf("%i %lu ", i, after.tv_nsec - before.tv_nsec);
+	ft_printf("%i %lu ", i, after.tv_sec * 1000000000 + after.tv_nsec - before.tv_sec * 1000000000 - before.tv_nsec);
 	ft_memset(env->win.pixels, env->pallette.background.color, env->win.line_size * env->win.dim.y);
-	clock_gettime(CLOCK_REALTIME, &before);
+	clock_gettime(CLOCK, &before);
 	while (i --> 1)
 	{
 		if (i % env->map.dim.x > 0)
@@ -35,8 +37,8 @@ int fdf_repaint(t_fdf_env* env)
 		if (i % env->map.dim.x > 0 && i / env->map.dim.x > 0)
 			fdf_draw_gradient(env, GET(i - 1), GET(i - env->map.dim.x));
 	}
-	clock_gettime(CLOCK_REALTIME, &after);
-	ft_printf("%lu\n", after.tv_nsec - before.tv_nsec);
+	clock_gettime(CLOCK, &after);
+	ft_printf("%lu\n", after.tv_sec * 1000000000 + after.tv_nsec - before.tv_sec * 1000000000 - before.tv_nsec);
 	fta_clear(&screen_points);
 	return 0;
 }
