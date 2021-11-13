@@ -1,0 +1,7 @@
+[requires]
+minilibx_wrapper/1.0
+libft/2.3
+
+[generators]
+make
+virtualrunenv

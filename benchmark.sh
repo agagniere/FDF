@@ -15,13 +15,13 @@ if test -n "$3"
 then
 	result=$3
 fi
-if ! test -d "$folder"
+if test ! -d "$folder"
 then
 	mkdir -p $folder
 fi
 
 name=$(basename ${map%.*})
-gnuplot_script=$folder/"render.gnuplot"
+gnuplot_script="$folder/render.gnuplot"
 declare -a Targets=()
 
 echo set terminal png size 2560,1440 > $gnuplot_script
@@ -37,17 +37,20 @@ EOF
 make build # Build submodules with default flags
 for OPT in 0 s 2 fast
 do
-	make clean # Force recompilation of all files
-	for TRANSFORM in "" "-DSIMPLISTIC_TRANSFORM"
+	for ARCH in "" "-march=native"
 	do
-		CPPFLAGS="$TRANSFORM -O$OPT" make build
-		./fdf.exe --width=256 --height=256 --benchmark=1024 --output=/dev/null $map >> ${folder}/${name}-O${OPT}${TRANSFORM}.out
-		touch src/transform.c # force recompilation of the file affected by the define
-		Targets=("${Targets[@]}" "\"${folder}/${name}-O${OPT}${TRANSFORM}.out\" using (column(2)/column(1)) with lines title '-O${OPT} ${TRANSFORM}'")
+		make clean # Force recompilation of all files
+		for TRANSFORM in "" "-DSIMPLISTIC_TRANSFORM"
+		do
+			CPPFLAGS="$TRANSFORM $ARCH -O$OPT" make build
+			./fdf.exe --width=256 --height=256 --benchmark=1024 --output=/dev/null $map >> ${folder}/${name}-O${OPT}${TRANSFORM}${ARCH}.out
+			touch src/transform.c # force recompilation of the file affected by the define
+			Targets=("${Targets[@]}" "\"${folder}/${name}-O${OPT}${TRANSFORM}${ARCH}.out\" using (column(2)/column(1)) with lines title '-O${OPT} ${TRANSFORM} ${ARCH}'")
+		done
 	done
 done
 
 IFS=,
-echo -n "plot [10:1010][0:120] " >> $gnuplot_script
+echo -n "plot [5:1020][0:120] " >> $gnuplot_script
 echo "${Targets[*]}" >> $gnuplot_script
 gnuplot "$gnuplot_script"

@@ -54,6 +54,7 @@ dkms.conf
 # Temporary files
 *~
 *.swp
+*/#*#
 
 # Man pages
 *.1
@@ -64,3 +65,12 @@ dkms.conf
 *.jpg
 *.png
 *.xpm
+
+# Conan
+conan*.mak
+conan*.txt
+*.env
+*.lock
+*.ps1
+*.json
+*activate_run.sh

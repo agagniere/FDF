@@ -1,6 +1,6 @@
 [submodule "MinilibX"]
-	path = MinilibX
+	path = vendor/MinilibX
 	url = https://github.com/agagniere/MinilibX.git
 [submodule "Libft"]
-	path = Libft
+	path = vendor/Libft
 	url = https://github.com/agagniere/Libft.git

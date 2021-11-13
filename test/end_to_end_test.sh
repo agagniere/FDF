@@ -72,6 +72,8 @@ assert_error "echo -e '-0\t1   +2  -3\n 0 1 2 +pi ' | $FDF  -" \
 
 assert_error "echo -e ' 0 1 2 3 \n 3\t2   1 0 \n 0 1 2 ' | $FDF  -" \
 			 'Object described in file "<stdin>" is invalid : all lines are not the same length. (line 3)'
+assert_error "echo -e ' 0 1 2 3 \n 3\t2   1 0 \n 0 1 2 3\n\n\n 0 1\n 0 1 2 3\n' | $FDF  -" \
+			 'Object described in file "<stdin>" is invalid : all lines are not the same length. (line 6)'
 
 assert_error "echo -e '' | $FDF  -" \
 			 'Object described in file "<stdin>" is invalid : (0, 0) is not a valid dimension, it should have at least 2 points'
