@@ -1,33 +1,12 @@
+#include "bmp.h"
+
 #include <stdio.h>
 
 const int BYTES_PER_PIXEL = 4;
 const int FILE_HEADER_SIZE = 14;
 const int INFO_HEADER_SIZE = 40;
 
-unsigned char *createBitmapFileHeader(int height, int stride);
-unsigned char *createBitmapInfoHeader(int height, int width);
-
-void generateBitmapImage(const unsigned char* image, int height, int width, const char* imageFileName) {
-	int widthInBytes = width * BYTES_PER_PIXEL;
-	unsigned char padding[3] = {0, 0, 0};
-	int paddingSize = (4 - (widthInBytes) % 4) % 4;
-	int stride = (widthInBytes) + paddingSize;
-	FILE *imageFile = fopen(imageFileName, "wb");
-	unsigned char *fileHeader = createBitmapFileHeader(height, stride);
-	unsigned char *infoHeader = createBitmapInfoHeader(height, width);
-	int i;
-
-	fwrite(fileHeader, 1, FILE_HEADER_SIZE, imageFile);
-	fwrite(infoHeader, 1, INFO_HEADER_SIZE, imageFile);
-	i = height;
-	while (i --> 0) {
-		fwrite(image + (i * widthInBytes), BYTES_PER_PIXEL, width, imageFile);
-		fwrite(padding, 1, paddingSize, imageFile);
-	}
-	fclose(imageFile);
-}
-
-unsigned char *createBitmapFileHeader(int height, int stride) {
+static unsigned char *createBitmapFileHeader(int height, int stride) {
 	int fileSize = FILE_HEADER_SIZE + INFO_HEADER_SIZE + (stride * height);
 
 	static unsigned char fileHeader[] = {
@@ -48,7 +27,7 @@ unsigned char *createBitmapFileHeader(int height, int stride) {
 	return fileHeader;
 }
 
-unsigned char *createBitmapInfoHeader(int height, int width) {
+static unsigned char *createBitmapInfoHeader(int height, int width) {
 	static unsigned char infoHeader[] = {
 		0, 0, 0, 0, /// header size
 		0, 0, 0, 0, /// image width
@@ -76,4 +55,27 @@ unsigned char *createBitmapInfoHeader(int height, int width) {
 	infoHeader[14] = (unsigned char)(BYTES_PER_PIXEL * 8);
 
 	return infoHeader;
+}
+
+bool generateBitmapImage(const unsigned char* image, int height, int width, const char* imageFileName) {
+	int widthInBytes = width * BYTES_PER_PIXEL;
+	unsigned char padding[3] = {0, 0, 0};
+	int paddingSize = (4 - (widthInBytes) % 4) % 4;
+	int stride = (widthInBytes) + paddingSize;
+	FILE *imageFile = fopen(imageFileName, "wb");
+	unsigned char *fileHeader = createBitmapFileHeader(height, stride);
+	unsigned char *infoHeader = createBitmapInfoHeader(height, width);
+	int i;
+
+	if (imageFile == NULL)
+		return false;
+	fwrite(fileHeader, 1, FILE_HEADER_SIZE, imageFile);
+	fwrite(infoHeader, 1, INFO_HEADER_SIZE, imageFile);
+	i = height;
+	while (i --> 0)
+	{
+		fwrite(image + (i * widthInBytes), BYTES_PER_PIXEL, width, imageFile);
+		fwrite(padding, 1, paddingSize, imageFile);
+	}
+	return fclose(imageFile) == 0;
 }
