@@ -43,7 +43,7 @@ int fdf_start(const char* program_name, const char* filename, t_dimension dim, c
 {
 	void*     mlx;
 	t_array   windows __attribute__((cleanup(free_fdf_array))) = NEW_ARRAY(t_fdf_env);
-	t_fdf_env fdf = NEW_FDF_ENV;
+	t_fdf_env fdf     __attribute__((cleanup(fdf_free)))       = NEW_FDF_ENV;
 
 	errno   = 0;
 	fdf.map = fdf_parse(filename);

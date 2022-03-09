@@ -21,7 +21,7 @@ int fdf_repaint(t_fdf_env* env)
 {
 	struct timespec before, after;
 	clock_gettime(CLOCK, &before);
-	t_array screen_points = fdf_transform(env);
+	t_array screen_points __attribute__((cleanup(fta_clear))) = fdf_transform(env);
 	clock_gettime(CLOCK, &after);
 	unsigned i = screen_points.size;
 
@@ -39,7 +39,6 @@ int fdf_repaint(t_fdf_env* env)
 	}
 	clock_gettime(CLOCK, &after);
 	ft_printf("%lu\n", after.tv_sec * 1000000000 + after.tv_nsec - before.tv_sec * 1000000000 - before.tv_nsec);
-	fta_clear(&screen_points);
 	return 0;
 }
 

@@ -70,6 +70,8 @@ t_fdf_map fdf_parse(const char* filename);
 ** The ouput format is an array of 3D integer points,
 ** whose first two coordinates correspond to a pixel,
 ** and the last is a color.
+** -
+** Its returned array MUST BE FREED with fta_clear
 */
 t_array fdf_transform(t_fdf_env* env);
 

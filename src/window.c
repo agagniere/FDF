@@ -23,7 +23,9 @@ bool make_window(t_window* out, void* mlx, t_dimension dim, const char* name, t_
 
 void free_window(t_window* win)
 {
-	mlx_destroy_image(win->mlx_ptr, win->mlx_img);
-	mlx_destroy_window(win->mlx_ptr, win->mlx_win);
+	if (win->mlx_img)
+		mlx_destroy_image(win->mlx_ptr, win->mlx_img);
+	if (win->mlx_win)
+		mlx_destroy_window(win->mlx_ptr, win->mlx_win);
 	ft_bzero(win, sizeof(win));
 }
