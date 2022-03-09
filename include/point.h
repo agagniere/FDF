@@ -15,7 +15,14 @@ typedef struct point2_unsigned t_dimension;
 		T x;                  \
 		T y;                  \
 		T z;                  \
-	} t_point3_##T
+	} t_point3_##T;           \
+	typedef struct point4_##T \
+	{                         \
+		T x;                  \
+		T y;                  \
+		T z;                  \
+		T w;                  \
+	} t_point4_##T
 
 S_POINTS(int);
 S_POINTS(unsigned);
@@ -31,6 +38,7 @@ S_POINTS(double);
 ** example:
 ** MAKE_POINT(int,3,4) -> (s_point2_int){3,4}
 ** MAKE_POINT(float,0,7,3) -> (s_point3_float){0,7,3}
+** MAKE_POINT(double,1,2,3,4) -> (s_point4_double){1,2,3,4}
 */
 
 #define MAKE_POINT(T, ...) (CAT(CAT(t_point,ARG_COUNT(__VA_ARGS__)),CAT(_,T))){__VA_ARGS__}

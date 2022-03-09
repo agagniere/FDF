@@ -2,7 +2,58 @@
 
 #include <math.h>
 
-#ifndef SIMPLISTIC_TRANSFORM
+#ifdef MATRIX4D_TRANSFORM
+
+typedef t_real t_matrix;
+
+static void add_rotation(t_matrix* m, t_real angle, int axe)
+{
+	const t_real s = sinf(angle);
+	const t_real c = cosf(angle);
+	t_matrix b[] = { c, -s,  s, 0,
+	                 s,  c, -s, 0,
+	                 -s, s,  c, 0,
+                     0,  0,  0, 1};
+	t_matrix r[16];
+	int i = 3;
+
+	while (i --> 0)
+		b[4 * axe + i] = (b[4 * i + axe] = 0);
+	b[4 * axe + axe] = 1;
+	i = 16;
+	while (i --> 0)
+	{
+		r[i]  = 0;
+		int x = i % 4;
+		int y = i / 4;
+		int j = 4;
+		while (j --> 0)
+			r[i] += m[4*j+x] * b[4*y+j];
+	}
+	ft_memcpy(m, r, sizeof(r));
+}
+
+t_array fdf_transform(t_fdf_env* env)
+{
+	t_array       result   = NEW_ARRAY(t_point3_int);
+	t_point3_int* iterator = ARRAY_ITERATOR(&env->map.points);
+
+	fta_reserve(&result, env->map.points.size);
+	while ((void*)++iterator < ARRAY_END(&env->map.points))
+    {
+        t_quater point = MAKE_POINT(float, iterator->x, iterator->y, iterator->z, env->zoom);
+
+    }
+}
+
+#elifndef SIMPLISTIC_TRANSFORM
+
+/*
+** Very simple and concise implementation using Euler angles
+** -
+** Matrix matrix multiplication is only done outside the loop
+** so no simplification or optimisation was attempted.
+*/
 
 typedef t_real t_matrix;
 
@@ -58,12 +109,16 @@ t_array fdf_transform(t_fdf_env* env)
 
 #else
 
+/*
+** Naive implementation I see quite often
+*/
 t_array fdf_transform(t_fdf_env* env)
 {
 	t_array       result   = NEW_ARRAY(t_point3_int);
 	t_point3_int* iterator = ARRAY_ITERATOR(&env->map.points);
 	t_3Dpoint     point;
 	t_point3_int  screen_point;
+   float         f;
 
 	fta_reserve(&result, env->map.points.size);
 	while ((void*)++iterator < ARRAY_END(&env->map.points))
@@ -73,7 +128,7 @@ t_array fdf_transform(t_fdf_env* env)
 		point.x -= env->map.dim.x / 2;
 		point.y -= env->map.dim.y / 2;
 
-		float f = point.x * cos(env->rotation.z) - point.y * sin(env->rotation.z);
+		f =       point.x * cos(env->rotation.z) - point.y * sin(env->rotation.z);
 		point.y = point.x * sin(env->rotation.z) + point.y * cos(env->rotation.z);
 		point.x = f;
 

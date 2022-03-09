@@ -8,9 +8,21 @@
 #define SET_FLOAT_PRECISION(T)	  \
 	typedef T                 t_real; \
 	typedef struct point2_##T t_complex; \
-	typedef struct point3_##T t_3Dpoint
+	typedef struct point3_##T t_3Dpoint; \
+	typedef struct point4_##T t_quater
 
+/*
+** Careful with this :
+** should be the same for all compilation units
+** can't be checked by Make
+** -
+** Used for comparative benchmarking
+*/
+#ifdef DOUBLE_PRECISION
+SET_FLOAT_PRECISION(double);
+#else
 SET_FLOAT_PRECISION(float);
+#endif
 
 typedef struct fdf_map t_fdf_map;
 typedef struct fdf_env t_fdf_env;
