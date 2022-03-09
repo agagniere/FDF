@@ -34,6 +34,8 @@ jobs:
         ./fdf.exe --output=doc/pylone.bmp maps/pylone.fdf
     - name: Benchmark
       run: bash benchmark.sh maps/mars.fdf tmp doc/benchmark.png
+    - name: Test
+      run: ( cd test ; bash end_to_end_test.sh )
     - name: Upload output
       uses: actions/upload-artifact@v3.0.0
       with:

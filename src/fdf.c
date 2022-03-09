@@ -1,10 +1,8 @@
 #include "fdf.h"
 
-#include <errno.h>
 #include <ft_printf.h>
 #include <math.h>
 #include <mlx.h>
-#include <stdio.h>
 
 /*
 ** A major non-POSIX OS, Android,
@@ -34,35 +32,22 @@ void fdf_free(t_fdf_env* env)
 	fta_clear(&env->map.points);
 }
 
-static void free_fdf_array(t_array* self)
+t_fdf_error fdf_start(const char* filename, t_dimension dim, const char* title)
 {
-	fta_clearf(self, (void*)fdf_free);
-}
+	void*       mlx;
+	t_fdf_env   fdf __attribute__((cleanup(fdf_free))) = NEW_FDF_ENV;
+	t_fdf_error error = fdf_parse(filename, &fdf.map);
 
-int fdf_start(const char* program_name, const char* filename, t_dimension dim, const char* title)
-{
-	void*     mlx;
-	t_array   windows __attribute__((cleanup(free_fdf_array))) = NEW_ARRAY(t_fdf_env);
-	t_fdf_env fdf     __attribute__((cleanup(fdf_free)))       = NEW_FDF_ENV;
-
-	errno   = 0;
-	fdf.map = fdf_parse(filename);
-	if (fdf.map.points.size == 0)
-	{
-		perror(program_name);
-		return 3;
-	}
-	if ((mlx = mlx_init()) == NULL
-	    || !make_window(&fdf.win, mlx, dim, title, FDF_HOOKS)
-	    || fta_append(&windows, &fdf, 1) != 0)
-	{
-		ft_dprintf(2, "%s: MLX initialization failure\n", program_name);
-		return 4;
-	}
+	if (FDF_IS_ERROR(error))
+		return error;
+	if ((mlx = mlx_init()) == NULL)
+		return FDF_ERROR_STATIC("X11/Cocoa failed to open display");
+	if (!make_window(&fdf.win, mlx, dim, title, FDF_HOOKS))
+		return FDF_ERROR_STATIC("Failed to create a window");
 	mlx_do_key_autorepeaton(mlx);
 	fdf_init(&fdf);
 	fdf_repaint(&fdf);
 	fdf_expose(&fdf.win);
 	mlx_loop(mlx);
-	return 0;
+	return FDF_NO_ERROR;
 }

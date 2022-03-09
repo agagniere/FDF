@@ -36,8 +36,31 @@ struct window
 	int         endian;
 };
 
-#define NO_HOOKS (t_hooks){NULL, NULL, NULL, NULL, NULL, NULL, NULL}
-#define NEW_WINDOW (t_window){NO_HOOKS, NULL, NULL, NULL, NULL, {0,0}, 0, 0, 0}
+#define NO_HOOKS                                                    \
+    (struct hooks)                                                  \
+    {                                                               \
+        .expose      = NULL,                                        \
+        .repaint     = NULL,                                        \
+        .key_press   = NULL,                                        \
+        .key_release = NULL,                                        \
+        .mouse_click = NULL,                                        \
+        .mouse_move  = NULL,                                        \
+        .mouse_drag  = NULL                                         \
+    }
+
+#define NEW_WINDOW                                                  \
+    (struct window)                                                 \
+    {                                                               \
+        .hooks         = NO_HOOKS,                                  \
+        .mlx_ptr       = NULL,                                      \
+        .mlx_win       = NULL,                                      \
+        .mlx_img       = NULL,                                      \
+        .pixels        = NULL,                                      \
+        .dim           = {0, 0},                                    \
+        .bit_per_pixel = 0,                                         \
+        .line_size     = 0,                                         \
+        .endian        = 0                                          \
+    }
 
 bool make_window(t_window* out_win, void* mlx, t_dimension dim, const char* name, t_hooks hooks);
 void free_window(t_window* win);

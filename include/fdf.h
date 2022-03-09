@@ -1,12 +1,13 @@
 #pragma once
 
 #include "colors.h"
+#include "fdf_errors.h"
 #include "mlx_wrapper.h"
 
 #include <ft_array.h>
 
-#define SET_FLOAT_PRECISION(T)	  \
-	typedef T                 t_real; \
+#define SET_FLOAT_PRECISION(T)           \
+	typedef T                 t_real;    \
 	typedef struct point2_##T t_complex; \
 	typedef struct point3_##T t_3Dpoint
 
@@ -42,27 +43,57 @@ struct fdf_env
 	float               zoom;
 };
 
-#define DEFAULT_FDF_PALLETTE (struct fdf_pallette){RGB(255,255,255), RGB(140,140,140), RGB(140,200,110), RGB(130,180,230), RGB(50,50,150)}
+#define DEFAULT_FDF_PALLETTE                  \
+	(struct fdf_pallette)                     \
+	{                                         \
+		.background     = RGB(255, 255, 255), \
+		.top            = RGB(140, 140, 140), \
+		.bottom         = RGB(140, 200, 110), \
+		.subzero_top    = RGB(130, 180, 230), \
+		.subzero_bottom = RGB(50,   50, 150)  \
+	}
 
-#define FDF_HOOKS (struct hooks){fdf_expose, fdf_repaint, fdf_key_press, NULL, NULL, NULL, NULL}
+#define FDF_HOOKS                   \
+	(struct hooks)                  \
+	{                               \
+		.expose    = fdf_expose,    \
+		.repaint   = fdf_repaint,   \
+		.key_press = fdf_key_press, \
+		NULL, NULL, NULL, NULL      \
+	}
 
-#define NEW_FDF_MAP (t_fdf_map){NEW_ARRAY(t_point3_int), MAKE_POINT(unsigned,0,0), 0, 0}
-#define NEW_FDF_ENV (t_fdf_env){NEW_WINDOW, NEW_FDF_MAP, DEFAULT_FDF_PALLETTE, {0,0,0}, {0,0}, 1}
+#define NEW_FDF_MAP                           \
+	(struct fdf_map)                          \
+	{                                         \
+		.points = NEW_ARRAY(t_point3_int),    \
+		.dim    = MAKE_POINT(unsigned, 0, 0), \
+		.z_max  = 0,                          \
+		.z_min  = 0                           \
+	}
 
-void fdf_init(t_fdf_env* env);
+#define NEW_FDF_ENV                       \
+	(struct fdf_env)                      \
+	{                                     \
+		.win      = NEW_WINDOW,           \
+		.map      = NEW_FDF_MAP,          \
+		.pallette = DEFAULT_FDF_PALLETTE, \
+		.rotation = {0, 0, 0},            \
+		.offset   = {0, 0},               \
+		.zoom     = 1                     \
+	}
 
-void fdf_free(t_fdf_env* env);
+void        fdf_init(t_fdf_env* env);
+void        fdf_free(t_fdf_env* env);
 
-int  fdf_start(const char* program_name, const char* filename, t_dimension dim, const char* title);
-int  headless(const char* input_file_name, t_dimension dim, const char* output_file_name, int benchmark_iterations);
+t_fdf_error fdf_start(const char* filename, t_dimension dim, const char* title);
+t_fdf_error headless(const char* input_file_name, t_dimension dim, const char* output_file_name, int benchmark_iterations);
 
 /*
 ** FDF::parse
 ** -
-** Loads the specified file into a map.
-** In case of failure the map will have 0 element.
+** Loads the specified file into the map.
 */
-t_fdf_map fdf_parse(const char* filename);
+t_fdf_error fdf_parse(const char* filename, t_fdf_map* out_map);
 
 /*
 ** FDF::transform
