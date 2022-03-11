@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         test $(uname -s) != "Darwin" && sudo apt-get update && sudo apt-get -yq install libx11-dev libxext-dev libxpm-dev
-        $(test $(uname -s) = "Darwin" && echo brew install || sudo apt-get install -yq ) ghostscript help2man gnuplot
+        $(test $(uname -s) = "Darwin" && echo brew install || echo sudo apt-get install -yq ) ghostscript help2man gnuplot
     - name: Compile
       run: make build
     - name: Generate documentation
