@@ -16,13 +16,13 @@ jobs:
 
     steps:
     - name: Download source files
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3.0.0
       with:
         submodules: recursive
     - name: Install dependencies
       run: |
-        test $(uname -s) = "Darwin" || sudo apt-get -yq install libx11-dev libxext-dev libxpm-dev ghostscript help2man gnuplot
-        test $(uname -s) != "Darwin" || brew install ghostscript help2man gnuplot
+        test $(uname -s) != "Darwin" && sudo apt-get update && sudo apt-get -yq install libx11-dev libxext-dev libxpm-dev
+        $(test $(uname -s) = "Darwin" && echo brew install || sudo apt-get install -yq ) ghostscript help2man gnuplot
     - name: Compile
       run: make build
     - name: Generate documentation
@@ -35,7 +35,7 @@ jobs:
     - name: Benchmark
       run: bash benchmark.sh maps/mars.fdf tmp doc/benchmark.png
     - name: Upload output
-      uses: actions/upload-artifact@v1.0.0
+      uses: actions/upload-artifact@v3.0.0
       with:
         name: FDF_doc
         path: doc
