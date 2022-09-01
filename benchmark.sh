@@ -35,18 +35,15 @@ cat <<-'EOF' >> $gnuplot_script
 EOF
 
 make build # Build submodules with default flags
-for OPT in 0 s 2 fast
+for FLAGS in -O0 -O2 -Ofast_-march=native
 do
-	for ARCH in "" "-march=native"
+	make clean # Force recompilation of all files
+	for TRANSFORM in "" "-DSIMPLISTIC_TRANSFORM"
 	do
-		make clean # Force recompilation of all files
-		for TRANSFORM in "" "-DSIMPLISTIC_TRANSFORM"
-		do
-			CPPFLAGS="$TRANSFORM $ARCH -O$OPT" make build
-			./fdf.exe --width=256 --height=256 --benchmark=1024 --output=/dev/null $map >> ${folder}/${name}-O${OPT}${TRANSFORM}${ARCH}.out
-			touch src/transform.c # force recompilation of the file affected by the define
-			Targets=("${Targets[@]}" "\"${folder}/${name}-O${OPT}${TRANSFORM}${ARCH}.out\" using (column(2)/column(1)) with lines title '-O${OPT} ${TRANSFORM} ${ARCH}'")
-		done
+        CPPFLAGS="$(tr '_' ' ' <<<$FLAGS) $TRANSFORM" make build
+		./fdf.exe --width=256 --height=256 --benchmark=1024 --output=/dev/null $map >> ${folder}/${name}${FLAGS}${TRANSFORM}.out
+		touch src/transform.c # force recompilation of the file affected by the define
+		Targets=("${Targets[@]}" "\"${folder}/${name}${FLAGS}${TRANSFORM}.out\" using (column(2)/column(1)) with lines title '$(tr '_' ' ' <<<${FLAGS}_${TRANSFORM})'")
 	done
 done
 
