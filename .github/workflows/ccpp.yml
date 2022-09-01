@@ -15,32 +15,48 @@ jobs:
         os: [macos-latest, ubuntu-latest]
     steps:
     - name: Download source files
-      uses: actions/checkout@v3.0.0
+      uses: actions/checkout@v3.0.2
       with:
         submodules: recursive
+    - name: Setup Python
+      uses: actions/setup-python@v4.2.0
     - name: Install utilities
       run: |
         test $(uname -s) != "Darwin" && sudo apt-get update
         $(test $(uname -s) = "Darwin" && echo brew install || echo sudo apt-get -yq install) ghostscript help2man gnuplot
-    - name: Setup Python
-      uses: actions/setup-python@v3.0.0
     - name: Install conan
-      run : python3 -m pip install conan
-    - name: Prepare dependencies
+      run : |
+        python3 -m pip install conan
+        conan profile new default --detect
+        conan profile update options.libft:shared=False default
+        conan profile update options.minilibx:shared=False default
+        conan profile update conf.tools.system.package_manager:mode=install default
+        conan profile update conf.tools.system.package_manager:sudo=True default
+        conan profile show default
+    - name: Compile Libft
       run: |
-        pushd vendor
-        ( cd  Libft ; conan install . -o "libft:shared=False" ; conan build . ; conan export-pkg .)
-        ( cd  MinilibX ; conan export .)
-        pushd HLM
-        export CONAN_SYSREQUIRES_MODE=enabled
-        conan install . --build missing -o "libft:shared=False" -o "minilibx:shared=False"
+        pushd vendor/Libft
+        conan install .
         conan build .
         conan export-pkg .
         popd
-        popd
-    - name: Compile
+    - name: Compile MinilibX
       run: |
-        conan install . --build missing -o "libft:shared=False" -o "minilibx:shared=False"
+        pushd vendor/MinilibX
+        conan install .
+        conan build .
+        conan export-pkg .
+        popd
+    - name: Compile HLM
+      run: |
+        pushd vendor/HLM
+        conan install .
+        conan build .
+        conan export-pkg .
+        popd
+    - name: Compile FDF
+      run: |
+        conan install .
         make build
     - name: Generate documentation
       run: |
