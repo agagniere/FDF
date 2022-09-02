@@ -1,6 +1,6 @@
 [requires]
 minilibx_wrapper/1.0
-libft/2.3
+libft/2.5
 
 [generators]
 make

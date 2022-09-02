@@ -24,7 +24,7 @@ class MLXWrapperConan(ConanFile):
     }
     generators = "make"
     requires = [
-        "libft/2.3",
+        "libft/2.5",
         "minilibx/1.2"
     ]
     build_policy = "missing"
