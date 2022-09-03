@@ -1,5 +1,3 @@
-MAKEFLAGS += -j8
-
 NAME:=fdf.exe
 
 # Folders
@@ -13,58 +11,44 @@ FILES   = $(shell find $(SOURCE_PATH) -name '*.c')
 OBJECTS = $(subst $(SOURCE_PATH),$(CACHE_PATH),$(FILES:.c=.o))
 DEPFILES= $(OBJECTS:.o=.d)
 
-# ===== Libraries =====
-LFT_PATH := Libft
-LFT_NAME := ft
-LFT = $(LFT_PATH)/lib$(LFT_NAME).a
+# ===== Compiler =====
+CC       ?= gcc
+CFLAGS   += -Wall -Wextra
+CPPFLAGS += $(addprefix -I,$(HEADER_PATH))
+LDLIBS   += "-lm"
+# ====================
 
-MLX_PATH := MinilibX
-MLX_NAME := mlx
-MLX = $(MLX_PATH)/lib$(MLX_NAME).a
-
-LIBS_NAME = $(LFT_NAME) $(MLX_NAME) m
-LIBS_PATH = $(LFT_PATH) $(MLX_PATH)
-LIBS = $(LFT) $(MLX)
+# ======= Conan =======
+CONAN_BUILD_INFO = conanbuildinfo.mak
+include $(CONAN_BUILD_INFO)
+CFLAGS   += $(CONAN_CFLAGS)
+CPPFLAGS += $(addprefix -I, $(CONAN_INCLUDE_DIRS))
+CPPFLAGS += $(addprefix -D, $(CONAN_DEFINES))
+LDFLAGS  += $(addprefix -L, $(CONAN_LIB_DIRS))
+LDLIBS   += $(addprefix -l, $(CONAN_LIBS))
+LDLIBS   += $(addprefix -l, $(CONAN_SYSTEM_LIBS))
+LDLIBS   += $(addprefix -framework , $(CONAN_FRAMEWORKS))
 # =====================
 
-# ===== Compiler =====
-CC ?= gcc
-
-LDFLAGS += $(addprefix -L,$(LIBS_PATH))
-LDLIBS  += $(addprefix -l,$(LIBS_NAME))
-
-# Configuration results
-MLX_CONFIG = $(MLX:.a=.mk)
-include $(MLX_CONFIG)
-
-CPPFLAGS += -Wall -Wextra -g
-CPPFLAGS += $(addprefix -I,$(HEADER_PATH) $(LFT_PATH)/include $(MLX_PATH)/$(MLX_FOLDER))
-# ====================
 
 build: $(NAME)
 
 include $(wildcard $(DEPFILES))
 
-$(MLX_CONFIG):
-	( cd $(@D) ; ./configure )
+$(CONAN_BUILD_INFO):
+	conan install .
 
-$(NAME): $(LIBS)
 $(NAME): $(OBJECTS)
-	$(CC) $^ $(LDFLAGS) $(LDLIBS) -o $@
+	$(CC) $^ $(CFLAGS) $(LDFLAGS) $(LDLIBS) -o $@
 
 $(CACHE_PATH)/%.o: $(SOURCE_PATH)/%.c | $(CACHE_PATH)
 	$(CC) $(CPPFLAGS) -MMD -c -o $@ $<
-
-%.a:
-	@make -C $(@D)
 
 $(CACHE_PATH) $(DOC_PATH):
 	mkdir $@
 
 clean:
 	$(RM) -r $(CACHE_PATH)
-	$(MAKE) -C $(MLX_PATH) $@ --no-print-directory
-	$(MAKE) -C $(LFT_PATH) $@ --no-print-directory
 
 fclean: clean
 	$(RM) $(NAME)
@@ -77,7 +61,7 @@ man: $(DOC_PATH)/$(NAME:%.exe=%.1)
 pdf: $(DOC_PATH)/$(NAME:%.exe=%.pdf)
 
 $(DOC_PATH)/fdf.1: $(NAME) | $(DOC_PATH)
-	help2man --no-info ./$< --output $@
+	-help2man --no-info --output $@ ./$<
 
 %.pdf: %.1
 	man -t $< | ps2pdf - $@

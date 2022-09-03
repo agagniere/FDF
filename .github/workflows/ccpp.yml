@@ -13,35 +13,69 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest]
-
     steps:
     - name: Download source files
-      uses: actions/checkout@v3.0.0
+      uses: actions/checkout@v3.0.2
       with:
         submodules: recursive
-    - name: Install dependencies
+    - name: Install utilities
       run: |
-        test $(uname -s) != "Darwin" && sudo apt-get update && sudo apt-get -yq install libx11-dev libxext-dev libxpm-dev
-        $(test $(uname -s) = "Darwin" && echo brew install || echo sudo apt-get install -yq ) ghostscript help2man gnuplot
-    - name: Compile
-      run: make build
+        test $(uname -s) != "Darwin" && sudo apt-get update
+        $(test $(uname -s) = "Darwin" && echo brew install || echo sudo apt-get -yq install) ghostscript help2man gnuplot
+    - name: Setup Python
+      uses: actions/setup-python@v4.2.0
+      with:
+        python-version: '3.10'
+    - name: Install conan
+      run : |
+        python3 -m pip install conan
+        conan profile new default --detect
+        conan profile update options.libft:shared=False default
+        conan profile update options.minilibx:shared=False default
+        conan profile update conf.tools.system.package_manager:mode=install default
+        conan profile update conf.tools.system.package_manager:sudo=True default
+        conan profile show default
+    - name: Compile Libft
+      run: |
+        pushd vendor/Libft
+        conan install .
+        conan build .
+        conan export-pkg .
+        popd
+    - name: Compile MinilibX
+      run: |
+        pushd vendor/MinilibX
+        conan install .
+        conan build .
+        conan export-pkg .
+        popd
+    - name: Compile HLM
+      run: |
+        pushd vendor/HLM
+        conan install .
+        conan build .
+        conan export-pkg .
+        popd
+    - name: Compile FDF
+      run: |
+        conan install .
+        make build
     - name: Generate documentation
-      run: make pdf
+      run: |
+        ./fdf.exe --version
+        ./fdf.exe --help
+        make pdf
     - name: Run
       run: |
         ./fdf.exe --output=doc/42.bmp maps/42.fdf
         ./fdf.exe --output=doc/mars.bmp maps/mars.fdf
         ./fdf.exe --output=doc/pylone.bmp maps/pylone.fdf
-    - name: Benchmark
-      run: bash benchmark.sh maps/mars.fdf tmp doc/benchmark.png
     - name: Test
       run: ( cd test ; bash end_to_end_test.sh )
+    - name: Benchmark
+      run: bash benchmark.sh maps/mars.fdf tmp doc/benchmark
     - name: Upload output
-      uses: actions/upload-artifact@v3.0.0
+      uses: actions/upload-artifact@v3.1.0
       with:
         name: FDF_doc
         path: doc
-    - name: Clean
-      run: |
-        make fclean
-        git clean -xdf

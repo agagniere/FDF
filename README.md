@@ -1,28 +1,28 @@
 # FDF
 Wireframe rendering of heightmaps.
 
-![C/C++ CI](https://github.com/agagniere/FDF/workflows/C/C++%20CI/badge.svg?branch=conanless)
+![C/C++ CI](https://github.com/agagniere/FDF/workflows/C/C++%20CI/badge.svg?branch=master)
 
 ## Dependencies
 
-### System packages
+Dependencies are handled by Conan.
 
-Install these packages via your favorite package manager
+However I did not push my packages in conancenter, so they must be created locally
 
-Required to compile on Linux:
-* __libx11-dev__
-* __libxext-dev__
-* __libxpm-dev__
-
-Optional:
-* __help2man__ to generate man pages
-* __ghostscript__ to generate pdf documentation
-* __gnuplot__ to render benchmark report
-
-### Submodules
-
+### Create packages in local cache
 ```bash
 git submodule update --init
+for folder in vendor/Libft vendor/MinilibX vendor/HLM
+do
+    (cd $folder && conan create .)
+done
+```
+
+### Finally
+
+For this exmaple, we will disable the use of dynamic libraries. Such options can be set in a conan profile for reusability
+```bash
+conan install . --options libft:shared=False --options minilibx:shared=False --build missing
 ```
 
 ## Build
@@ -30,7 +30,6 @@ git submodule update --init
 ```bash
 make
 ```
-It will run the MinilibX `./configure` and compile the whole project.
 
 ## Documentation
 
@@ -54,7 +53,7 @@ xdg-open doc/fdf.pdf
 ## Benchmark
 
 ```
-bash benchmark.sh maps/mars.fdf tmp_folder my_image_name.png
+bash benchmark.sh maps/mars.fdf tmp_folder my_image_name
 xdg-open my_image_name.png
 ```
 
