@@ -1,4 +1,4 @@
-MAKEFLAGS += -j
+MAKEFLAGS += -j8
 
 NAME:=fdf.exe
 
