@@ -38,7 +38,6 @@ include $(wildcard $(DEPFILES))
 $(CONAN_BUILD_INFO):
 	conan install .
 
-$(NAME): $(LIBS)
 $(NAME): $(OBJECTS)
 	$(CC) $^ $(CFLAGS) $(LDFLAGS) $(LDLIBS) -o $@
 

@@ -2,7 +2,7 @@
 
 map="maps/mars.fdf"
 folder="/tmp/fdf_benchmark"
-result="benchmark_graph.png"
+result="benchmark_graph"
 if test -n "$1"
 then
 	map=$1
@@ -24,9 +24,7 @@ name=$(basename ${map%.*})
 gnuplot_script="$folder/render.gnuplot"
 declare -a Targets=()
 
-echo set terminal png size 2560,1440 > $gnuplot_script
-echo "set output '${result}'" >> $gnuplot_script
-cat <<-'EOF' >> $gnuplot_script
+cat <<-'EOF' > $gnuplot_script
 	set title 'Comparing transform algorithms and optimization flags'
 	set xlabel 'Iteration'
 	set ylabel 'Average delay to transform 1 point (ns)'
@@ -48,6 +46,9 @@ do
 done
 
 IFS=,
-echo -n "plot [5:1020][0:120] " >> $gnuplot_script
-echo "${Targets[*]}" >> $gnuplot_script
+echo set terminal png size 2560,1440 >> $gnuplot_script
+echo "set output '${result}_transform.png'" >> $gnuplot_script
+echo "plot [5:1020][0:120] ${Targets[*]}" >> $gnuplot_script
+echo "set output '${result}_transform_autozoom.png'" >> $gnuplot_script
+echo "plot [5:1020][0:] ${Targets[*]}" >> $gnuplot_script
 gnuplot "$gnuplot_script"

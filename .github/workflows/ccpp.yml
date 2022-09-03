@@ -73,7 +73,7 @@ jobs:
     - name: Test
       run: ( cd test ; bash end_to_end_test.sh )
     - name: Benchmark
-      run: bash benchmark.sh maps/mars.fdf tmp doc/benchmark.png
+      run: bash benchmark.sh maps/mars.fdf tmp doc/benchmark
     - name: Upload output
       uses: actions/upload-artifact@v3.1.0
       with:
