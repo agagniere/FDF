@@ -115,4 +115,4 @@ int fdf_expose(t_window* win);
 /* Hook called to handle a keyboard input */
 int fdf_key_press(int key, t_fdf_env* env);
 
-void fdf_draw_gradient(t_fdf_env* env, t_point3_int from, t_point3_int to);
+int fdf_draw_gradient(t_fdf_env* env, t_point3_int from, t_point3_int to);

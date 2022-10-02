@@ -24,21 +24,22 @@ int fdf_repaint(t_fdf_env* env)
 	t_array screen_points __attribute__((cleanup(fta_clear))) = fdf_transform(env);
 	clock_gettime(CLOCK, &after);
 	unsigned i = screen_points.size;
+	unsigned lines = 0;
 
-	ft_printf("%i %lu ", i, after.tv_sec * 1000000000 + after.tv_nsec - before.tv_sec * 1000000000 - before.tv_nsec);
+	ft_printf("%u %lu ", i, after.tv_sec * 1000000000 + after.tv_nsec - before.tv_sec * 1000000000 - before.tv_nsec);
 	ft_memset(env->win.pixels, env->pallette.background.color, env->win.line_size * env->win.dim.y);
 	clock_gettime(CLOCK, &before);
 	while (i --> 1)
 	{
 		if (i % env->map.dim.x > 0)
-			fdf_draw_gradient(env, GET(i), GET(i - 1));
-		if (i / env->map.dim.x > 0)
-			fdf_draw_gradient(env, GET(i), GET(i - env->map.dim.x));
-		if (i % env->map.dim.x > 0 && i / env->map.dim.x > 0)
-			fdf_draw_gradient(env, GET(i - 1), GET(i - env->map.dim.x));
+			lines += fdf_draw_gradient(env, GET(i), GET(i - 1));
+		if (i >= env->map.dim.x)
+			lines += fdf_draw_gradient(env, GET(i), GET(i - env->map.dim.x));
+		if (i % env->map.dim.x > 0 && i >= env->map.dim.x)
+			lines += fdf_draw_gradient(env, GET(i - 1), GET(i - env->map.dim.x));
 	}
 	clock_gettime(CLOCK, &after);
-	ft_printf("%lu\n", after.tv_sec * 1000000000 + after.tv_nsec - before.tv_sec * 1000000000 - before.tv_nsec);
+	ft_printf("%u %lu\n", lines, after.tv_sec * 1000000000 + after.tv_nsec - before.tv_sec * 1000000000 - before.tv_nsec);
 	return 0;
 }
 
