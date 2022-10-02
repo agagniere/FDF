@@ -2,9 +2,9 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, conanless ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, conanless ]
 
 jobs:
   build:
@@ -23,8 +23,11 @@ jobs:
       run: |
         test $(uname -s) != "Darwin" && sudo apt-get update && sudo apt-get -yq install libx11-dev libxext-dev libxpm-dev
         $(test $(uname -s) = "Darwin" && echo brew install || echo sudo apt-get install -yq ) ghostscript help2man gnuplot
+    - name: Get number of CPU cores
+      uses: SimenB/github-actions-cpu-cores@v1
+      id: cpu-cores
     - name: Compile
-      run: make build
+      run: CFLAGS='-O2' make build -j ${{ steps.cpu-cores.outputs.count }}
     - name: Generate documentation
       run: make pdf
     - name: Run
@@ -32,10 +35,14 @@ jobs:
         ./fdf.exe --output=doc/42.bmp maps/42.fdf
         ./fdf.exe --output=doc/mars.bmp maps/mars.fdf
         ./fdf.exe --output=doc/pylone.bmp maps/pylone.fdf
-    - name: Benchmark
-      run: bash benchmark.sh maps/mars.fdf tmp doc/benchmark.png
     - name: Test
       run: ( cd test ; bash end_to_end_test.sh )
+    - name: Setup Python
+      uses: actions/setup-python@v4.2.0
+      with:
+        python-version: '3.10'
+    - name: Benchmark
+      run: python -m benchmark --map maps/mars.fdf --prefix doc/benchmark_mars --width 1080 --height 1080 --iterations 1024 --jobs ${{ steps.cpu-cores.outputs.count }}
     - name: Upload output
       uses: actions/upload-artifact@v3.0.0
       with:

@@ -8,14 +8,25 @@
 #include <time.h>
 
 #define CLOCK CLOCK_MONOTONIC_RAW
+#define time_diff(A, B) ((B.tv_sec - A.tv_sec) * 1000000000 + B.tv_nsec - A.tv_nsec)
+
+#define NAIVE 2
+
+#if !defined(DRAWING_ALGO)
+# define GET(N) ARRAY_GETL(t_point3_int, &screen_points, N)
+# define draw fdf_draw_gradient
+#elif DRAWING_ALGO == NAIVE
+# define GET(N) ARRAY_GETL(t_point2_int, &screen_points, N)
+# define draw(env, a, b) draw_line((t_window*)env, a, b, (150 << 8) + 200)
+#else
+#error Unknown drawing algorithm DRAWING_ALGO
+#endif
 
 int fdf_expose(t_window* win)
 {
 	mlx_put_image_to_window(win->mlx_ptr, win->mlx_win, win->mlx_img, 0, 0);
 	return 0;
 }
-
-#define GET(N) ARRAY_GETL(t_point3_int, &screen_points, N)
 
 int fdf_repaint(t_fdf_env* env)
 {
@@ -26,20 +37,20 @@ int fdf_repaint(t_fdf_env* env)
 	unsigned i = screen_points.size;
 	unsigned lines = 0;
 
-	ft_printf("%u %lu ", i, after.tv_sec * 1000000000 + after.tv_nsec - before.tv_sec * 1000000000 - before.tv_nsec);
+	ft_printf("%u %lu ", i, time_diff(before, after));
 	ft_memset(env->win.pixels, env->pallette.background.color, env->win.line_size * env->win.dim.y);
 	clock_gettime(CLOCK, &before);
 	while (i --> 1)
 	{
 		if (i % env->map.dim.x > 0)
-			lines += fdf_draw_gradient(env, GET(i), GET(i - 1));
+			lines += draw(env, GET(i), GET(i - 1));
 		if (i >= env->map.dim.x)
-			lines += fdf_draw_gradient(env, GET(i), GET(i - env->map.dim.x));
+			lines += draw(env, GET(i), GET(i - env->map.dim.x));
 		if (i % env->map.dim.x > 0 && i >= env->map.dim.x)
-			lines += fdf_draw_gradient(env, GET(i - 1), GET(i - env->map.dim.x));
+			lines += draw(env, GET(i - 1), GET(i - env->map.dim.x));
 	}
 	clock_gettime(CLOCK, &after);
-	ft_printf("%u %lu\n", lines, after.tv_sec * 1000000000 + after.tv_nsec - before.tv_sec * 1000000000 - before.tv_nsec);
+	ft_printf("%u %lu\n", lines, time_diff(before, after));
 	return 0;
 }
 
