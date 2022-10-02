@@ -166,6 +166,7 @@ enum e_key
 	KEY_X /* = 0x78 */,
 	KEY_Y /* = 0x79 */,
 	KEY_Z /* = 0x7a */,
+	KEY_Delete    = 0xff08,
 	KEY_LeftArrow = 0xff51,
 	KEY_UpArrow /* = 0xff52 */,
 	KEY_RightArrow /* = 0xff53 */,
