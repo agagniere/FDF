@@ -56,6 +56,7 @@ int fdf_key_press(int key, t_fdf_env* env)
 	case KEY_RightBracket: env->rotation.y += 0.2;  break;
 	case KEY_UpArrow:      env->rotation.x += 0.2;  break;
 	case KEY_DownArrow:    env->rotation.x -= 0.2;  break;
+	case KEY_Delete:       fdf_init(env);           break;
 	case KEY_W:            env->offset.y -= env->win.dim.y / 10; break;
 	case KEY_S:            env->offset.y += env->win.dim.y / 10; break;
 	case KEY_A:            env->offset.x -= env->win.dim.x / 10; break;

@@ -20,8 +20,9 @@ void fdf_init(t_fdf_env* env)
 	const float mid_height_onscreen = zoom * (env->map.z_min + env->map.z_max) / 2;
 
 	env->zoom = zoom;
-	env->rotation.z = M_PI_4;
 	env->rotation.x = M_PI_4;
+	env->rotation.y = 0;
+	env->rotation.z = M_PI_4;
 	env->offset.x = env->win.dim.x / 2;
 	env->offset.y = env->win.dim.y / 2 + mid_height_onscreen / 2;
 }
