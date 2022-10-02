@@ -16,7 +16,7 @@ void set_pixel(t_window* win, unsigned x, unsigned y, int color)
 		whole_pixels[win->dim.x * y + x] = color;
 }
 
-void draw_line(t_window* win, t_point2_int from, t_point2_int to, int color)
+int draw_line(t_window* win, t_point2_int from, t_point2_int to, int color)
 {
 	t_point2_int diff          = MAKE_POINT(int, to.x - from.x, to.y - from.y);
 	bool         is_horizontal = ABS(diff.x) > ABS(diff.y);
@@ -25,7 +25,7 @@ void draw_line(t_window* win, t_point2_int from, t_point2_int to, int color)
 	int          i             = 0;
 
 	if (!is_in_frame(win, from.x, from.y) && !is_in_frame(win, to.x, to.y))
-		return;
+		return 0;
 	while (i != max)
 	{
 		if (is_horizontal)
@@ -35,4 +35,5 @@ void draw_line(t_window* win, t_point2_int from, t_point2_int to, int color)
 		i += way;
 	}
 	set_pixel(win, to.x, to.y, color);
+	return 1;
 }

@@ -1,5 +1,3 @@
-MAKEFLAGS += -j8
-
 NAME:=fdf.exe
 
 # Folders
@@ -37,7 +35,7 @@ LDLIBS  += $(addprefix -l,$(LIBS_NAME))
 MLX_CONFIG = $(MLX:.a=.mk)
 include $(MLX_CONFIG)
 
-CPPFLAGS += -Wall -Wextra -g
+CFLAGS   += -Wall -Wextra -g
 CPPFLAGS += $(addprefix -I,$(HEADER_PATH) $(LFT_PATH)/include $(MLX_PATH)/$(MLX_FOLDER))
 # ====================
 
@@ -50,21 +48,19 @@ $(MLX_CONFIG):
 
 $(NAME): $(LIBS)
 $(NAME): $(OBJECTS)
-	$(CC) $^ $(LDFLAGS) $(LDLIBS) -o $@
+	$(CC) $(CFLAGS) $^ $(LDFLAGS) $(LDLIBS) -o $@
 
 $(CACHE_PATH)/%.o: $(SOURCE_PATH)/%.c | $(CACHE_PATH)
-	$(CC) $(CPPFLAGS) -MMD -c -o $@ $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -c -o $@ $<
 
 %.a:
-	@make -C $(@D)
+	@$(MAKE) -C $(@D)
 
 $(CACHE_PATH) $(DOC_PATH):
 	mkdir $@
 
 clean:
 	$(RM) -r $(CACHE_PATH)
-	$(MAKE) -C $(MLX_PATH) $@ --no-print-directory
-	$(MAKE) -C $(LFT_PATH) $@ --no-print-directory
 
 fclean: clean
 	$(RM) $(NAME)
