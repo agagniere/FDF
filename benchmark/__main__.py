@@ -29,45 +29,27 @@ if __name__ == '__main__':
     transform_targets = []
     draw_targets = []
     my_env = os.environ.copy()
-    my_env['CFLAGS'] = '-O2 -march=native'
+    my_env['CFLAGS'] = '-O3 -march=native'
     subprocess.run(['mkdir', '-p', cli_args.folder])
     subprocess.run(['make', 'fclean', '-C', 'Libft'])
     subprocess.run(['make', 'fclean', '-C', 'MinilibX'])
     subprocess.run(['make', 'build', f'-j{cli_args.jobs}'], env=my_env) # Ensure dependencies are built with good flags
     for cflags in ['-O0', '-O2', '-O2 -march=native', '-Ofast -march=native']:
         name = ''.join(filter(str.isalnum, cflags))
-
-        tsv_name = f'{cli_args.folder}/bench_{name}.out'
-        my_env['CFLAGS'] = cflags
-        my_env['CPPFLAGS'] = ''
-        subprocess.run(['make', 'clean'])
-        subprocess.run(['make', 'build', f'-j{cli_args.jobs}'], env=my_env)
-        with open(tsv_name, 'w') as tsv:
-            subprocess.run(map(str, ['./fdf.exe', '--width', cli_args.width, '--height', cli_args.height,
-                            '--benchmark', cli_args.iterations, '--output', '/dev/null', cli_args.map]),
-                           stdout=tsv)
-        transform_targets.append(Target(cflags, tsv_name, 'column(2)/column(1)', 'lines'))
-        draw_targets.append(Target(cflags, tsv_name, 'column(4)/column(3)', 'lines'))
-
-        tsv_name = f'{cli_args.folder}/bench_{name}_st.out'
-        my_env['CPPFLAGS'] = '-DSIMPLISTIC_TRANSFORM'
-        subprocess.run(['touch', 'src/transform.c'])
-        subprocess.run(['make', 'build', f'-j{cli_args.jobs}'], env=my_env)
-        with open(tsv_name, 'w') as tsv:
-            subprocess.run(map(str, ['./fdf.exe', '--width', cli_args.width, '--height', cli_args.height,
-                            '--benchmark', cli_args.iterations, '--output', '/dev/null', cli_args.map]),
-                           stdout=tsv)
-        transform_targets.append(Target('Simplistic' + cflags, tsv_name, 'column(2)/column(1)', 'lines'))
-
-        tsv_name = f'{cli_args.folder}/bench_{name}_naive.out'
-        my_env['CPPFLAGS'] = '-DDRAWING_ALGO=NAIVE'
-        subprocess.run(['touch', 'src/hooks.c'])
-        subprocess.run(['make', 'build', f'-j{cli_args.jobs}'], env=my_env)
-        with open(tsv_name, 'w') as tsv:
-            subprocess.run(map(str, ['./fdf.exe', '--width', cli_args.width, '--height', cli_args.height,
-                            '--benchmark', cli_args.iterations, '--output', '/dev/null', cli_args.map]),
-                           stdout=tsv)
-        draw_targets.append(Target('Naive' + cflags, tsv_name, 'column(4)/column(3)', 'lines'))
+        for prefix, suffix, cppflag, command, targets in [('', '', '', ['make', 'clean'], [(transform_targets, 'column(2)/column(1)'), (draw_targets, 'column(4)/column(3)')]),
+                                                  ('Simple ', '_simple', '-DSIMPLISTIC_TRANSFORM', ['touch', 'src/transform.c'], [(transform_targets, 'column(2)/column(1)')]),
+                                                  ('Naive ', '_naive', '-DDRAWING_ALGO=NAIVE', ['touch', 'src/hooks.c'], [(draw_targets, 'column(4)/column(3)')])]:
+            tsv_name = f'{cli_args.folder}/bench_{name}{suffix}.out'
+            my_env['CFLAGS'] = cflags
+            my_env['CPPFLAGS'] = cppflag
+            subprocess.run(command)
+            subprocess.run(['make', 'build', f'-j{cli_args.jobs}'], env=my_env)
+            with open(tsv_name, 'w') as tsv:
+                subprocess.run(map(str, ['./fdf.exe', '--width', cli_args.width, '--height', cli_args.height,
+                                         '--benchmark', cli_args.iterations, '--output', '/dev/null', cli_args.map]),
+                               stdout=tsv)
+            for target, formula in targets:
+                target.append(Target(prefix + cflags, tsv_name, formula, 'lines'))
 
     script_name = f'{cli_args.folder}/render.gnuplot'
     with open(script_name, 'w') as plot_script:
