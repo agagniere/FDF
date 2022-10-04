@@ -29,7 +29,7 @@ if __name__ == '__main__':
     transform_targets = []
     draw_targets = []
     my_env = os.environ.copy()
-    my_env['CFLAGS'] = '-O3 -march=native'
+    my_env['CFLAGS'] = '-O3'
     subprocess.run(['mkdir', '-p', cli_args.folder])
     subprocess.run(['make', 'fclean', '-C', 'Libft'])
     subprocess.run(['make', 'fclean', '-C', 'MinilibX'])
