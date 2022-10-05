@@ -30,7 +30,7 @@ int fdf_color(t_fdf_env* env, int altitude)
 	return result.color;
 }
 
-int fdf_draw_gradient(t_fdf_env* env, t_point3_int from, t_point3_int to)
+bool fdf_draw_gradient(t_fdf_env* env, t_point3_int from, t_point3_int to)
 {
 	t_point3_int diff          = MAKE_POINT(int, to.x - from.x, to.y - from.y, to.z - from.z);
 	bool         is_horizontal = ABS(diff.x) > ABS(diff.y);
@@ -39,7 +39,7 @@ int fdf_draw_gradient(t_fdf_env* env, t_point3_int from, t_point3_int to)
 	int          i             = 0;
 
 	if (!is_in_frame(&env->win, from.x, from.y) && !is_in_frame(&env->win, to.x, to.y))
-		return 0;
+		return false;
 	while (i != max)
 	{
 		if (is_horizontal)
@@ -49,5 +49,5 @@ int fdf_draw_gradient(t_fdf_env* env, t_point3_int from, t_point3_int to)
 		i += way;
 	}
 	set_pixel(&env->win, to.x, to.y, fdf_color(env, to.z));
-	return 1;
+	return true;
 }
