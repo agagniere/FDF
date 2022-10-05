@@ -39,10 +39,10 @@ $(CONAN_BUILD_INFO):
 	conan install .
 
 $(NAME): $(OBJECTS)
-	$(CC) $^ $(CFLAGS) $(LDFLAGS) $(LDLIBS) -o $@
+	$(CC) $(CFLAGS) $^ $(LDFLAGS) $(LDLIBS) -o $@
 
 $(CACHE_PATH)/%.o: $(SOURCE_PATH)/%.c | $(CACHE_PATH)
-	$(CC) $(CPPFLAGS) -MMD -c -o $@ $<
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -c -o $@ $<
 
 $(CACHE_PATH) $(DOC_PATH):
 	mkdir $@

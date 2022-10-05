@@ -53,8 +53,30 @@ xdg-open doc/fdf.pdf
 ## Benchmark
 
 ```
-bash benchmark.sh maps/mars.fdf tmp_folder my_image_name
-xdg-open my_image_name.png
+python -m benchmark
+xdg-open benchmark_mars_transform.png
+xdg-open benchmark_mars_draw.png
+```
+
+```
+$ python -m benchmark --help
+usage: __main__.py [-h] [--map MAP] [--prefix PREFIX] [--folder FOLDER]
+                   [--width WIDTH] [--height HEIGHT] [--iterations ITERATIONS]
+                   [-j JOBS]
+
+Run benchmarks and draw graphs
+
+options:
+  -h, --help            show this help message and exit
+  --map MAP             Input file to render
+  --prefix PREFIX       Prefix for the graph images
+  --folder FOLDER       Folder where to put temporary files
+  --width WIDTH         Width of the image to render
+  --height HEIGHT       Height of the image to render
+  --iterations ITERATIONS
+                        Number of times to render the same image
+  -j JOBS, --jobs JOBS  Number of parallel jobs when compiling
+
 ```
 
 ## Disclaimer

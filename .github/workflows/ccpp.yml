@@ -2,9 +2,9 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, conanless ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, conanless ]
 
 jobs:
   build:
@@ -22,6 +22,9 @@ jobs:
       run: |
         test $(uname -s) != "Darwin" && sudo apt-get update
         $(test $(uname -s) = "Darwin" && echo brew install || echo sudo apt-get -yq install) ghostscript help2man gnuplot
+    - name: Get number of CPU cores
+      uses: SimenB/github-actions-cpu-cores@v1
+      id: cpu-cores
     - name: Setup Python
       uses: actions/setup-python@v4.2.0
       with:
@@ -32,6 +35,9 @@ jobs:
         conan profile new default --detect
         conan profile update options.libft:shared=False default
         conan profile update options.minilibx:shared=False default
+        conan profile update options.libft:optimisation=3 default
+        conan profile update options.minilibx:optimisation=3 default
+        conan profile update options.minilibx_wrapper:optimisation=3 default
         conan profile update conf.tools.system.package_manager:mode=install default
         conan profile update conf.tools.system.package_manager:sudo=True default
         conan profile show default
@@ -59,7 +65,7 @@ jobs:
     - name: Compile FDF
       run: |
         conan install .
-        make build
+        make build -j ${{ steps.cpu-cores.outputs.count }}
     - name: Generate documentation
       run: |
         ./fdf.exe --version
@@ -73,7 +79,7 @@ jobs:
     - name: Test
       run: ( cd test ; bash end_to_end_test.sh )
     - name: Benchmark
-      run: bash benchmark.sh maps/mars.fdf tmp doc/benchmark
+      run: python -m benchmark --map maps/mars.fdf --prefix doc/benchmark_mars --width 1080 --height 1080 --iterations 750 --jobs ${{ steps.cpu-cores.outputs.count }}
     - name: Upload output
       uses: actions/upload-artifact@v3.1.0
       with:
