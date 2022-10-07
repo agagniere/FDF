@@ -65,7 +65,7 @@ struct window
 bool make_window(t_window* out_win, void* mlx, t_dimension dim, const char* name, t_hooks hooks);
 void free_window(t_window* win);
 
-int draw_line(t_window* win, t_point2_int from, t_point2_int to, int color);
+bool draw_line(t_window* win, t_point2_int from, t_point2_int to, int color);
 void set_pixel(t_window* win, unsigned x, unsigned y, int color);
 
 bool is_in_frame(t_window* win, unsigned x, unsigned y);

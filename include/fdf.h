@@ -5,6 +5,7 @@
 #include "mlx_wrapper.h"
 
 #include <ft_array.h>
+#include <stdbool.h>
 
 #define SET_FLOAT_PRECISION(T)           \
 	typedef T                 t_real;    \
@@ -115,4 +116,4 @@ int fdf_expose(t_window* win);
 /* Hook called to handle a keyboard input */
 int fdf_key_press(int key, t_fdf_env* env);
 
-int fdf_draw_gradient(t_fdf_env* env, t_point3_int from, t_point3_int to);
+bool fdf_draw_gradient(t_fdf_env* env, t_point3_int from, t_point3_int to);
