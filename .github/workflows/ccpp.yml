@@ -5,6 +5,7 @@ on:
     branches: [ master, conanless ]
   pull_request:
     branches: [ master, conanless ]
+  workflow_dispatch: {}
 
 jobs:
   build:
